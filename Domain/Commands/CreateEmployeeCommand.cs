@@ -15,7 +15,10 @@ namespace Domain.Commands
 
     public class CreateEmployeeCommandResult
     {
-        public int EmployeeId { get; init; }
+        public int EmployeeId { get; init; }        
+        public bool Success { get; init; }
+        public bool DepartmentExists { get; init; }
+        public bool PositionExists { get; init; }
     }
 
     internal class CreateEmployeeCommandHandler : BaseHandler<CreateEmployeeCommand, CreateEmployeeCommandResult>
@@ -33,7 +36,31 @@ namespace Domain.Commands
 
         protected override async Task<CreateEmployeeCommandResult> HandleInternal(CreateEmployeeCommand request, CancellationToken cancellationToken)
         {
-            string createEmployeeCommand = 
+            string deparmentExistsQuery =
+            $@"
+                SELECT EXISTS(SELECT 1 FROM departments WHERE id='{request.Employee.DepartmentId}')
+            ";
+
+            string positionExistsQuery =
+            $@"
+                SELECT EXISTS(SELECT 1 FROM positions WHERE id='{request.Employee.PositionId}')
+            ";
+
+            bool deparmentExists = await ExecuteSqlQuery<bool>(_connection, deparmentExistsQuery, cancellationToken);
+            bool positionExists = await ExecuteSqlQuery<bool>(_connection, positionExistsQuery, cancellationToken);
+
+            if (!deparmentExists || !positionExists)
+            {
+                return new()
+                {
+                    EmployeeId = -1,
+                    Success = false,
+                    DepartmentExists = deparmentExists,
+                    PositionExists = positionExists
+                };
+            }
+
+            string createEmployeeQuery = 
             $@"
                 INSERT INTO employees (department_id, position_id, first_name, last_name, patronymic, address, phone, birth_date, employment_date, salary)
                 VALUES
@@ -52,11 +79,14 @@ namespace Domain.Commands
                 RETURNING id
             ";
 
-            int id = await ExecuteSqlQuery<int>(_connection, createEmployeeCommand, cancellationToken);
+            int id = await ExecuteSqlQuery<int>(_connection, createEmployeeQuery, cancellationToken);
 
             return new()
             {
-                EmployeeId = id
+                EmployeeId = id,
+                Success = true,
+                DepartmentExists = true,
+                PositionExists = true
             };
         }
     }

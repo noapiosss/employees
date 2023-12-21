@@ -29,13 +29,13 @@ namespace Domain.Commands
 
         protected override async Task<GetAllEmployeesQueryResult> HandleInternal(GetAllEmployeesQuery request, CancellationToken cancellationToken)
         {
-            string getAllEmployeesCommand =
+            string getAllEmployeesQuery =
             $@"
                 SELECT *
                 FROM emplyees
             ";
 
-            List<Employee> employees = await ExecuteCollectionSqlQuery<Employee>(_connection, getAllEmployeesCommand, cancellationToken);
+            List<Employee> employees = await ExecuteCollectionSqlQuery<Employee>(_connection, getAllEmployeesQuery, cancellationToken);
 
             return new()
             {

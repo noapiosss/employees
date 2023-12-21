@@ -29,13 +29,13 @@ namespace Domain.Commands
 
         protected override async Task<GetPositionsQueryResult> HandleInternal(GetPositionsQuery request, CancellationToken cancellationToken)
         {
-            string getDepartmentsCommand =
+            string getDepartmentsQuery =
             $@"
                 SELECT *
                 FROM positions
             ";
 
-            List<Department> positions = await ExecuteCollectionSqlQuery<Department>(_connection, getDepartmentsCommand, cancellationToken);
+            List<Department> positions = await ExecuteCollectionSqlQuery<Department>(_connection, getDepartmentsQuery, cancellationToken);
 
             return new()
             {

@@ -6,6 +6,6 @@ namespace Contracts.Database
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public ICollection<Employee> Employees { get; set; }
+        public ICollection<DepartmentPosition> Departments { get; set; }
     }
 }
