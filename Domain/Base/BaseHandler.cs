@@ -81,7 +81,8 @@ namespace Domain.Base
             if (type.IsValueType)
             {
                 rd.Read();
-                return rd.GetFieldValue<T>(0);
+
+                return rd.IsDBNull(0) ? obj : rd.GetFieldValue<T>(0);
             }
 
             PropertyInfo[] properties = type.GetProperties();

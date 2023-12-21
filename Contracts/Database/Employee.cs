@@ -13,8 +13,8 @@ namespace Contracts.Database
         public string Patronymic { get; set; }
         public string Address { get; set; }
         public string Phone { get; set; }
-        public DateTime BirthDate { get; set; }
-        public DateTime EmploymentDate { get; set; }
+        public DateOnly BirthDate { get; set; }
+        public DateOnly EmploymentDate { get; set; }
         public decimal Salary { get; set; }
     }
 }

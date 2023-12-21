@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -37,8 +38,8 @@ namespace Api.Controllers
                     Patronymic = request.Patronymic,
                     Address = request.Address,
                     Phone = request.Phone,
-                    BirthDate = request.BirthDate,
-                    EmploymentDate = request.EmploymentDate,
+                    BirthDate = DateOnly.FromDateTime(request.BirthDate),
+                    EmploymentDate = DateOnly.FromDateTime(request.EmploymentDate),
                     Salary = request.Salary,
                 };
 
@@ -58,6 +59,19 @@ namespace Api.Controllers
             {
                 GetAllEmployeesQuery query = new() {  };
                 GetAllEmployeesQueryResult result = await _mediator.Send(query, cancellationToken);
+
+                return Ok(result);
+
+            }, cancellationToken);
+        }
+
+        [HttpGet("/filters")]
+        public Task<IActionResult> GetFilters(CancellationToken cancellationToken)
+        {
+            return SafeExecute(async () =>
+            {
+                GetFiltersQuery query = new() {  };
+                GetFiltersQueryResult result = await _mediator.Send(query, cancellationToken);
 
                 return Ok(result);
 

@@ -2,7 +2,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Contracts.Database;
 using Domain.Base;
-using Domain.Helpers.Interfaces;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -24,14 +23,11 @@ namespace Domain.Commands
     internal class CreateEmployeeCommandHandler : BaseHandler<CreateEmployeeCommand, CreateEmployeeCommandResult>
     {
         private readonly BaseSqlConnection _connection;
-        private readonly IDateTimeHelper _dateTimeHelper;
         
         public CreateEmployeeCommandHandler(BaseSqlConnection connection,
-            IDateTimeHelper dateTimeHelper,
             ILogger<CreateEmployeeCommandHandler> logger) : base(logger)
         {
             _connection = connection;
-            _dateTimeHelper = dateTimeHelper;
         }
 
         protected override async Task<CreateEmployeeCommandResult> HandleInternal(CreateEmployeeCommand request, CancellationToken cancellationToken)
@@ -72,8 +68,8 @@ namespace Domain.Commands
                     '{request.Employee.Patronymic}',
                     '{request.Employee.Address}',
                     '{request.Employee.Phone}',
-                    '{_dateTimeHelper.DateTimeToPostgresDate(request.Employee.BirthDate)}',
-                    '{_dateTimeHelper.DateTimeToPostgresDate(request.Employee.EmploymentDate)}',
+                    '{request.Employee.BirthDate:yyyy-MM-dd}',
+                    '{request.Employee.EmploymentDate:yyyy-MM-dd}',
                     '{request.Employee.Salary}'
                 )
                 RETURNING id

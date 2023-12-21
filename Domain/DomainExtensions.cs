@@ -1,7 +1,5 @@
 using Domain.Base;
 using Domain.Commands;
-using Domain.Helpers;
-using Domain.Helpers.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Domain
@@ -11,8 +9,7 @@ namespace Domain
         public static IServiceCollection AddDomainServices(this IServiceCollection services)
         {
             return services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateDepartmentCommand).Assembly))
-                           .AddScoped<BaseSqlConnection>()
-                           .AddSingleton<IDateTimeHelper, DateTimeHelper>();
+                           .AddScoped<BaseSqlConnection>();
         }
     }
 }
