@@ -72,8 +72,8 @@ namespace Domain.Commands
                     '{request.Employee.Patronymic}',
                     '{request.Employee.Address}',
                     '{request.Employee.Phone}',
-                    '{_dateTimeHelper.DateTimeToPostresDate(request.Employee.BirthDate)}',
-                    '{_dateTimeHelper.DateTimeToPostresDate(request.Employee.EmploymentDate)}',
+                    '{_dateTimeHelper.DateTimeToPostgresDate(request.Employee.BirthDate)}',
+                    '{_dateTimeHelper.DateTimeToPostgresDate(request.Employee.EmploymentDate)}',
                     '{request.Employee.Salary}'
                 )
                 RETURNING id

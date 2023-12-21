@@ -4,6 +4,6 @@ namespace Domain.Helpers.Interfaces
 {
     public interface IDateTimeHelper
     {
-        public string DateTimeToPostresDate(DateTime dateTime);
+        public string DateTimeToPostgresDate(DateTime dateTime);
     }
 }

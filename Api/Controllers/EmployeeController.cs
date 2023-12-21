@@ -64,5 +64,55 @@ namespace Api.Controllers
             }, cancellationToken);
         }
 
+        [HttpGet("/positions/{positionId}")]
+        public Task<IActionResult> GetAllEmployeesByPosition(int positionId, CancellationToken cancellationToken)
+        {
+            return SafeExecute(async () =>
+            {
+                GetEmployeesByPositionQuery query = new() { PositionId = positionId };
+                GetEmployeesByPositionQueryResult result = await _mediator.Send(query, cancellationToken);
+
+                if (!result.Success)
+                {
+                    if (!result.PositionExists)
+                    {
+                        return ToActionResult(new()
+                        {
+                            Code = ErrorCode.PositionNotFound,
+                            Message = "Position does not exist"
+                        });
+                    }
+                }
+
+                return Ok(result.Employees);
+
+            }, cancellationToken);
+        }
+
+        [HttpGet("/departments/{departmentId}")]
+        public Task<IActionResult> GetAllEmployeesByDepartment(int departmentId, CancellationToken cancellationToken)
+        {
+            return SafeExecute(async () =>
+            {
+                GetEmployeesByDepartmentQuery query = new() { DepartmentId = departmentId };
+                GetEmployeesByDepartmentQueryResult result = await _mediator.Send(query, cancellationToken);
+
+                if (!result.Success)
+                {
+                    if (!result.DepartmentExists)
+                    {
+                        return ToActionResult(new()
+                        {
+                            Code = ErrorCode.DepartmentNotFound,
+                            Message = "Department does not exist"
+                        });
+                    }
+                }
+
+                return Ok(result.Employees);
+
+            }, cancellationToken);
+        }
+
     }
 }

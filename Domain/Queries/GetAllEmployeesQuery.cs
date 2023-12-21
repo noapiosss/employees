@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,7 +15,7 @@ namespace Domain.Commands
 
     public class GetAllEmployeesQueryResult
     {
-        public List<Employee> Employees { get; init; }
+        public ICollection<Employee> Employees { get; init; }
     }
 
     internal class GetAllEmployeesQueryHandler : BaseHandler<GetAllEmployeesQuery, GetAllEmployeesQueryResult>
@@ -29,10 +30,10 @@ namespace Domain.Commands
 
         protected override async Task<GetAllEmployeesQueryResult> HandleInternal(GetAllEmployeesQuery request, CancellationToken cancellationToken)
         {
-            string getAllEmployeesQuery =
+            string getAllEmployeesQuery = 
             $@"
                 SELECT *
-                FROM emplyees
+                FROM employees
             ";
 
             List<Employee> employees = await ExecuteCollectionSqlQuery<Employee>(_connection, getAllEmployeesQuery, cancellationToken);

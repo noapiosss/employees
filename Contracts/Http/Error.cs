@@ -4,6 +4,9 @@ namespace Contracts.Http
     {
         BadRequest = 40000,
         ExecutAccessForbidden = 40302,
+        DepartmentNotFound = 40401,
+        PositionNotFound = 40402,
+        EmployeeNotFound = 40403,
         NotAcceptable = 40600,
         DepartmentAlreadyExists = 40901,
         PositionAlreadyExists = 40902,
