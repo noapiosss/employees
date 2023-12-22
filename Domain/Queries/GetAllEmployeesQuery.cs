@@ -36,18 +36,18 @@ namespace Domain.Commands
                     employees.id as id,
                     employees.first_name as first_name,
                     employees.last_name as last_name,
-                    employyes.patronymic as patronymic,
-                    employyes.address as address,
-                    employyes.phone as phone,
-                    employyes.birth_date as birth_date,
-                    employyes.employment_date as employment_date,
-                    employyes.salary as salary,
+                    employees.patronymic as patronymic,
+                    employees.address as address,
+                    employees.phone as phone,
+                    employees.birth_date as birth_date,
+                    employees.employment_date as employment_date,
+                    employees.salary as salary,
                     departments.name as department_name,
                     positions.name as position_name
                 FROM employees
-                LEFT JOIN departments_position ON departments_position.id=employees.department_position_id
-                LEFT JOIN departments ON departments.id=departments_position.department_id
-                LEFT JOIN positions ON positions.id=departments_position.position_id
+                LEFT JOIN department_position ON department_position.employee_id=employees.id
+                LEFT JOIN departments ON departments.id=department_position.department_id
+                LEFT JOIN positions ON positions.id=department_position.position_id
             ";
 
             List<EmployeeDTO> employees = await ExecuteCollectionSqlQuery<EmployeeDTO>(_connection, getAllEmployeesQuery, cancellationToken);

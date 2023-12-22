@@ -64,10 +64,10 @@ namespace Domain.Commands
                     departments.name as department_name,
                     positions.name as position_name
                 FROM department_position
-                WHERE position_id={request.DepartmentId}
                 LEFT JOIN employees ON employees.id=department_position.employee_id
-                LEFT JOIN departments ON departments.id=departments_position.department_id
-                LEFT JOIN positions ON positions.id=departments_position.position_id
+                LEFT JOIN departments ON departments.id=department_position.department_id
+                LEFT JOIN positions ON positions.id=department_position.position_id                
+                WHERE department_id={request.DepartmentId}
                 ORDER BY departments.name
             ";
 

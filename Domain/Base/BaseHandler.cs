@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
-using System.Data.SqlClient;
-using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Intrinsics.Arm;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -45,11 +43,18 @@ namespace Domain.Base
             }
         }
 
+        protected async Task ExecuteSqlQuery(BaseSqlConnection connection, string sqlQuery, CancellationToken cancellationToken)
+        {
+            using NpgsqlCommand command = connection.ExecuteCommand(sqlQuery);
+            using NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken);
+        }
+
         protected async Task<T> ExecuteSqlQuery<T>(BaseSqlConnection connection, string sqlQuery, CancellationToken cancellationToken)
         {
             using NpgsqlCommand command = connection.ExecuteCommand(sqlQuery);
             using NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken);
 
+            reader.Read();
             return ConvertToObject<T>(reader);
         }
 
@@ -65,7 +70,7 @@ namespace Domain.Base
         {
             List<T> result = new();
 
-            while (rd.Read())
+            while(rd.Read())
             {
                 T obj = ConvertToObject<T>(rd);
                 result.Add(obj);
@@ -103,15 +108,12 @@ namespace Domain.Base
 
             if (type.IsValueType)
             {
-                var propertyNames = GetPropertyNames(rd);
-
-                rd.Read();
-
-                if (properties.Length == 1)
+                if (properties.Length == 0)
                 {
                     return rd.IsDBNull(0) ? obj : rd.GetFieldValue<T>(0);
                 }
 
+                string[] propertyNames = GetPropertyNames(rd);
                 object boxed = obj;
 
                 foreach (PropertyInfo property in properties)
@@ -123,6 +125,13 @@ namespace Domain.Base
                         if (!rd.IsDBNull(ordinal))
                         {
                             object value = rd.GetValue(ordinal);
+
+                            if (property.PropertyType == typeof(DateOnly))
+                            {
+                                property.SetValue(boxed, DateOnly.FromDateTime((DateTime)value));
+                                continue;
+                            }
+
                             property.SetValue(boxed, Convert.ChangeType(value, property.PropertyType));
                         }
                     }

@@ -153,5 +153,18 @@ namespace Api.Controllers
             }, cancellationToken);
         }
 
+        [HttpGet("/test")]
+        public Task<IActionResult> Test(CancellationToken cancellationToken)
+        {
+            return SafeExecute(async () =>
+            {
+                GenerateTestDataCommand command = new();
+                GenerateTestDataCommandResult result = await _mediator.Send(command, cancellationToken);
+                
+                return Ok();
+
+            }, cancellationToken);
+        }
+
     }
 }

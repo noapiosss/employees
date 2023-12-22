@@ -2,7 +2,7 @@ using System;
 
 namespace Contracts.Database
 {
-    public class EmployeeDTO
+    public struct EmployeeDTO
     {
         public int Id { get; set; }
         public string DepartmentName { get; set; }
