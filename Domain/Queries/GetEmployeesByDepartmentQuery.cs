@@ -15,7 +15,7 @@ namespace Domain.Commands
 
     public class GetEmployeesByDepartmentQueryResult
     {
-        public List<Employee> Employees { get; init; }
+        public List<EmployeeDTO> Employees { get; init; }
         public bool Success { get; init; }
         public bool DepartmentExists { get; init; }
     }
@@ -49,18 +49,29 @@ namespace Domain.Commands
                 };
             }
 
-
             string getEmployeesByDepartmentQuery =
             $@"
-                SELECT position.name, first_name, last_name, patronymic, address, phone, birth_date, employment_date
-                FROM employees
-                WHERE department_id={request.DepartmentId}
-                LEFT JOIN positions
-                    ON employees.position_id = positions.id
-                ORDER BY position.name
+                SELECT
+                    employees.id as id,
+                    employees.first_name as first_name,
+                    employees.last_name as last_name,
+                    employees.patronymic as patronymic,
+                    employees.address as address,
+                    employees.phone as phone,
+                    employees.birth_date as birth_date,
+                    employees.employment_date as employment_date,
+                    employees.salary as salary,
+                    departments.name as department_name,
+                    positions.name as position_name
+                FROM department_position
+                WHERE position_id={request.DepartmentId}
+                LEFT JOIN employees ON employees.id=department_position.employee_id
+                LEFT JOIN departments ON departments.id=departments_position.department_id
+                LEFT JOIN positions ON positions.id=departments_position.position_id
+                ORDER BY departments.name
             ";
 
-            List<Employee> employees = await ExecuteCollectionSqlQuery<Employee>(_connection, getEmployeesByDepartmentQuery, cancellationToken);
+            List<EmployeeDTO> employees = await ExecuteCollectionSqlQuery<EmployeeDTO>(_connection, getEmployeesByDepartmentQuery, cancellationToken);
 
             return new()
             {

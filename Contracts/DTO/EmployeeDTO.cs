@@ -2,11 +2,11 @@ using System;
 
 namespace Contracts.Database
 {
-    public class Employee
+    public class EmployeeDTO
     {
         public int Id { get; set; }
-        public int? DepartmentPositionId { get; set; }
-        public DepartmentPosition DepartmentPosition { get; set; }
+        public string DepartmentName { get; set; }
+        public string PositionName { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Patronymic { get; set; }

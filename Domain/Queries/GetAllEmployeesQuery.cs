@@ -15,7 +15,7 @@ namespace Domain.Commands
 
     public class GetAllEmployeesQueryResult
     {
-        public ICollection<Employee> Employees { get; init; }
+        public ICollection<EmployeeDTO> Employees { get; init; }
     }
 
     internal class GetAllEmployeesQueryHandler : BaseHandler<GetAllEmployeesQuery, GetAllEmployeesQueryResult>
@@ -32,11 +32,25 @@ namespace Domain.Commands
         {
             string getAllEmployeesQuery = 
             $@"
-                SELECT *
+                SELECT
+                    employees.id as id,
+                    employees.first_name as first_name,
+                    employees.last_name as last_name,
+                    employyes.patronymic as patronymic,
+                    employyes.address as address,
+                    employyes.phone as phone,
+                    employyes.birth_date as birth_date,
+                    employyes.employment_date as employment_date,
+                    employyes.salary as salary,
+                    departments.name as department_name,
+                    positions.name as position_name
                 FROM employees
+                LEFT JOIN departments_position ON departments_position.id=employees.department_position_id
+                LEFT JOIN departments ON departments.id=departments_position.department_id
+                LEFT JOIN positions ON positions.id=departments_position.position_id
             ";
 
-            List<Employee> employees = await ExecuteCollectionSqlQuery<Employee>(_connection, getAllEmployeesQuery, cancellationToken);
+            List<EmployeeDTO> employees = await ExecuteCollectionSqlQuery<EmployeeDTO>(_connection, getAllEmployeesQuery, cancellationToken);
 
             return new()
             {

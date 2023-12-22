@@ -16,8 +16,7 @@ namespace Domain.Commands
     {
         public int EmployeeId { get; init; }        
         public bool Success { get; init; }
-        public bool DepartmentExists { get; init; }
-        public bool PositionExists { get; init; }
+        public bool DepartmentPositionExists { get; init; }
     }
 
     internal class CreateEmployeeCommandHandler : BaseHandler<CreateEmployeeCommand, CreateEmployeeCommandResult>
@@ -32,27 +31,20 @@ namespace Domain.Commands
 
         protected override async Task<CreateEmployeeCommandResult> HandleInternal(CreateEmployeeCommand request, CancellationToken cancellationToken)
         {
-            string deparmentExistsQuery =
+            string departmentPositionExistsQuery =
             $@"
-                SELECT EXISTS(SELECT 1 FROM departments WHERE id='{request.Employee.DepartmentId}')
+                SELECT EXISTS(SELECT 1 FROM department_position WHERE id='{request.Employee.DepartmentPositionId}')
             ";
 
-            string positionExistsQuery =
-            $@"
-                SELECT EXISTS(SELECT 1 FROM positions WHERE id='{request.Employee.PositionId}')
-            ";
+            bool departmentPositionExists = await ExecuteSqlQuery<bool>(_connection, departmentPositionExistsQuery, cancellationToken);
 
-            bool deparmentExists = await ExecuteSqlQuery<bool>(_connection, deparmentExistsQuery, cancellationToken);
-            bool positionExists = await ExecuteSqlQuery<bool>(_connection, positionExistsQuery, cancellationToken);
-
-            if (!deparmentExists || !positionExists)
+            if (!departmentPositionExists)
             {
                 return new()
                 {
                     EmployeeId = -1,
                     Success = false,
-                    DepartmentExists = deparmentExists,
-                    PositionExists = positionExists
+                    DepartmentPositionExists = departmentPositionExists
                 };
             }
 
@@ -61,8 +53,7 @@ namespace Domain.Commands
                 INSERT INTO employees (department_id, position_id, first_name, last_name, patronymic, address, phone, birth_date, employment_date, salary)
                 VALUES
                 (
-                    (SELECT id FROM departments WHERE id = {request.Employee.DepartmentId}),
-                    (SELECT id FROM positions WHERE id = {request.Employee.PositionId}),
+                    (SELECT id FROM department_position WHERE id = {request.Employee.DepartmentPositionId}),
                     '{request.Employee.FirstName}',
                     '{request.Employee.LastName}',
                     '{request.Employee.Patronymic}',
@@ -81,8 +72,7 @@ namespace Domain.Commands
             {
                 EmployeeId = id,
                 Success = true,
-                DepartmentExists = true,
-                PositionExists = true
+                DepartmentPositionExists = true
             };
         }
     }

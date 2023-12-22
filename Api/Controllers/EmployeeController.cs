@@ -31,8 +31,7 @@ namespace Api.Controllers
             {
                 Employee employee = new()
                 {
-                    DepartmentId = request.DepartmentId,
-                    PositionId = request.PositionId,
+                    DepartmentPositionId = request.DepartmentPositionId,
                     FirstName = request.FirstName,
                     LastName = request.LastName,
                     Patronymic = request.Patronymic,
@@ -45,6 +44,19 @@ namespace Api.Controllers
 
                 CreateEmployeeCommand command = new() { Employee = employee };
                 CreateEmployeeCommandResult result = await _mediator.Send(command, cancellationToken);
+
+                if (!result.Success)
+                {
+                    if (!result.DepartmentPositionExists)
+                    {
+                        return ToActionResult(new()
+                        {
+                            Code = ErrorCode.DepartmentPositionNotFound,
+                            Message = "Department or position in department does not exists"
+                        });
+                    }
+                }
+
                 CreateEmployeeResponse response = new() { Id = result.EmployeeId };
 
                 return Ok(response);
@@ -72,6 +84,19 @@ namespace Api.Controllers
             {
                 GetFiltersQuery query = new() {  };
                 GetFiltersQueryResult result = await _mediator.Send(query, cancellationToken);
+
+                return Ok(result);
+
+            }, cancellationToken);
+        }
+
+        [HttpGet("/filtered")]
+        public Task<IActionResult> GetFilteredEmployees(CancellationToken cancellationToken)
+        {
+            return SafeExecute(async () =>
+            {
+                GetFilteredEmployeesQuery query = new() {  };
+                GetFilteredEmployeesQueryResult result = await _mediator.Send(query, cancellationToken);
 
                 return Ok(result);
 

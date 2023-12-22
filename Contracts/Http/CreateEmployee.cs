@@ -4,8 +4,7 @@ namespace Contracts.Http
 {
     public struct CreateEmployeeRequest
     {
-        public int DepartmentId { get; init; }
-        public int PositionId { get; init; }
+        public int DepartmentPositionId { get; init; }
         public string FirstName { get; init; }
         public string LastName { get; init; }
         public string Patronymic { get; init; }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Contracts.Database;
+using Contracts.Http;
 using Domain.Base;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -13,18 +14,13 @@ namespace Domain.Commands
     {
         public int DepartmentId { get; init; }
         public int PositionId { get; init; }
-        public DateTime MinEmploymentDate { get; init; }
-        public DateTime MaxEmploymentDate { get; init; }
-        public int MinAge { get; init; }
-        public int MaxAge { get; init; }
-        public decimal MinSalary { get; init; }
-        public decimal MaxSalary { get; init; }
+        public BoundFilterValues BoundFilterValues { get; init; }
         public string SearchRequest { get; init; }
     }
 
     public class GetFilteredEmployeesQueryResult
     {
-        public ICollection<Employee> Employees { get; init; }
+        public ICollection<EmployeeDTO> Employees { get; init; }
     }
 
     internal class GetFilteredEmployeesQueryHandler : BaseHandler<GetFilteredEmployeesQuery, GetFilteredEmployeesQueryResult>
@@ -39,9 +35,28 @@ namespace Domain.Commands
 
         protected override async Task<GetFilteredEmployeesQueryResult> HandleInternal(GetFilteredEmployeesQuery request, CancellationToken cancellationToken)
         {
-            string getFilteredEmployeesQuery = "";
+            string getFilteredEmployeesQuery = 
+            @$"
+                SELECT 
+                    employees.id as id,
+                    employees.first_name as first_name,
+                    employees.last_name as last_name,
+                    employees.patronymic as patronymic,
+                    employees.address as address,
+                    employees.phone as phone,
+                    employees.birth_date as birth_date,
+                    employees.employment_date as employment_date,
+                    employees.salary as salary,
+                    departments.name as department_name,
+                    positions.name as position_name
+                FROM department_position
+                JOIN employees ON department_position.employee_id=employees.id
+                JOIN positions ON department_position.position_id=positions.id
+                JOIN departments ON department_position.department_id=departments.id                
+                WHERE department_position.employee_id!=NULL
+            ";
 
-            List<Employee> employees = await ExecuteCollectionSqlQuery<Employee>(_connection, getFilteredEmployeesQuery, cancellationToken);
+            List<EmployeeDTO> employees = await ExecuteCollectionSqlQuery<EmployeeDTO>(_connection, getFilteredEmployeesQuery, cancellationToken);
 
             return new()
             {
