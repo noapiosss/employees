@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -60,7 +61,7 @@ namespace Domain.Base
             return ConvertToList<T>(reader);
         }
 
-        private static List<T> ConvertToList<T>(NpgsqlDataReader rd)
+        private List<T> ConvertToList<T>(NpgsqlDataReader rd)
         {
             List<T> result = new();
 
@@ -73,19 +74,62 @@ namespace Domain.Base
             return result;
         }
 
-        private static T ConvertToObject<T> (NpgsqlDataReader rd)
+        private string[] GetPropertyNames(NpgsqlDataReader reader)
+        {
+            int fieldCount = reader.FieldCount;
+            string[] propertyNames = new string[fieldCount];
+
+            for (int i = 0; i < fieldCount; i++)
+            {
+                string columnName = reader.GetName(i);
+                propertyNames[i] = columnName;
+            }
+
+            return propertyNames;
+        }
+
+        private string ToSnakeCase(string input)
+        {
+            return string.Concat(input.Select((x, i) =>
+                i > 0 && char.IsUpper(x) ? "_" + x.ToString() : x.ToString()
+            )).ToLower();
+        }
+
+        private T ConvertToObject<T> (NpgsqlDataReader rd)
         {
             T obj = Activator.CreateInstance<T>();
             Type type = typeof(T);
+            PropertyInfo[] properties = type.GetProperties();
 
             if (type.IsValueType)
             {
+                var propertyNames = GetPropertyNames(rd);
+
                 rd.Read();
 
-                return rd.IsDBNull(0) ? obj : rd.GetFieldValue<T>(0);
-            }
+                if (properties.Length == 1)
+                {
+                    return rd.IsDBNull(0) ? obj : rd.GetFieldValue<T>(0);
+                }
 
-            PropertyInfo[] properties = type.GetProperties();
+                object boxed = obj;
+
+                foreach (PropertyInfo property in properties)
+                {
+                    string snakeCaseName = ToSnakeCase(property.Name);
+                    if (propertyNames.Contains(snakeCaseName))
+                    {
+                        int ordinal = rd.GetOrdinal(snakeCaseName);
+                        if (!rd.IsDBNull(ordinal))
+                        {
+                            object value = rd.GetValue(ordinal);
+                            property.SetValue(boxed, Convert.ChangeType(value, property.PropertyType));
+                        }
+                    }
+                }
+
+                return (T)boxed;
+            }            
 
             for(int i = 0; i < rd.FieldCount; ++i)
             {
