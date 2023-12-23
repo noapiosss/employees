@@ -12,9 +12,9 @@ namespace Domain.Base
         private readonly string _connectionString;
         private NpgsqlConnection _connection;
 
-        public BaseSqlConnection()
+        public BaseSqlConnection(string connectionString)
         {
-            _connectionString = "Uid=postgres;Pwd=fyfnjksq123;Host=localhost:5432;Database=employees_db;";
+            _connectionString = connectionString;
             _connection = new(_connectionString);
             _connection.Open();
         }
