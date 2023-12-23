@@ -54,7 +54,7 @@ namespace Api.Controllers
         {
             return SafeExecute(async () =>
             {
-                GetPositionsQuery query = new() {  };
+                GetPositionsQuery query = new();
                 GetPositionsQueryResult result = await _mediator.Send(query, cancellationToken);
 
                 return Ok(result);

@@ -16,8 +16,8 @@ namespace Domain.Commands
 
     public class GetFiltersQueryResult
     {
-        public ICollection<Department> Departmens { get; init; }
-        public ICollection<Position> Positions { get; init; }
+        public ICollection<DepartmentDTO> Departmens { get; init; }
+        public ICollection<PositionDTO> Positions { get; init; }
         public BoundFilterValues BoundFilterValues { get; init ;}
     }
 
@@ -39,7 +39,7 @@ namespace Domain.Commands
                 FROM departments
             ";
 
-            List<Department> departments = await ExecuteCollectionSqlQuery<Department>(_connection, getAllDepartmnesQuery, cancellationToken);
+            List<DepartmentDTO> departments = await ExecuteCollectionSqlQuery<DepartmentDTO>(_connection, getAllDepartmnesQuery, cancellationToken);
 
             string getAllPositionsQuery =
             $@"
@@ -47,7 +47,7 @@ namespace Domain.Commands
                 FROM positions
             ";
 
-            List<Position> positions = await ExecuteCollectionSqlQuery<Position>(_connection, getAllPositionsQuery, cancellationToken);
+            List<PositionDTO> positions = await ExecuteCollectionSqlQuery<PositionDTO>(_connection, getAllPositionsQuery, cancellationToken);
 
             string getBoundFilterValuesQuery =
             $@"

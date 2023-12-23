@@ -53,7 +53,6 @@ namespace Domain.Commands
                 INSERT INTO employees (department_id, position_id, first_name, last_name, patronymic, address, phone, birth_date, employment_date, salary)
                 VALUES
                 (
-                    (SELECT id FROM department_position WHERE id = {request.Employee.DepartmentPositionId}),
                     '{request.Employee.FirstName}',
                     '{request.Employee.LastName}',
                     '{request.Employee.Patronymic}',

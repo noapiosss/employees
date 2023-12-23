@@ -64,6 +64,54 @@ namespace Api.Controllers
             }, cancellationToken);
         }
 
+        [HttpPost("/{employeeId}")]
+        public Task<IActionResult> EditEmployee(int employeeId, [FromBody] CreateEmployeeRequest request, CancellationToken cancellationToken)
+        {
+            return SafeExecute(async () =>
+            {
+                Employee employee = new()
+                {
+                    Id = employeeId,
+                    DepartmentPositionId = request.DepartmentPositionId,
+                    FirstName = request.FirstName,
+                    LastName = request.LastName,
+                    Patronymic = request.Patronymic,
+                    Address = request.Address,
+                    Phone = request.Phone,
+                    BirthDate = DateOnly.FromDateTime(request.BirthDate),
+                    EmploymentDate = DateOnly.FromDateTime(request.EmploymentDate),
+                    Salary = request.Salary,
+                };
+
+                EditEmployeeCommand command = new() { Employee = employee };
+                EditEmployeeCommandResult result = await _mediator.Send(command, cancellationToken);
+
+                if (!result.Success)
+                {
+                    if (!result.EmployeeExists)
+                    {
+                        return ToActionResult(new()
+                        {
+                            Code = ErrorCode.EmployeeNotFound,
+                            Message = "Employee does not exists"
+                        });
+                    }
+
+                    if (!result.DepartmentPositionExists)
+                    {
+                        return ToActionResult(new()
+                        {
+                            Code = ErrorCode.DepartmentPositionNotFound,
+                            Message = "Department or position in department does not exists"
+                        });
+                    }
+                }
+
+                return Ok();
+
+            }, cancellationToken);
+        }
+
         [HttpGet]
         public Task<IActionResult> GetAllEmployees(CancellationToken cancellationToken)
         {

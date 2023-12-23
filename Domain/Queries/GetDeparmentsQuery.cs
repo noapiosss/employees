@@ -14,7 +14,7 @@ namespace Domain.Commands
 
     public class GetDepartmentsQueryResult
     {
-        public List<Department> Departments { get; init; }
+        public List<DepartmentDTO> Departments { get; init; }
     }
 
     internal class GetDepartmentsQueryHandler : BaseHandler<GetDepartmentsQuery, GetDepartmentsQueryResult>
@@ -35,7 +35,7 @@ namespace Domain.Commands
                 FROM departments
             ";
 
-            List<Department> departments = await ExecuteCollectionSqlQuery<Department>(_connection, getDepartmentsQuery, cancellationToken);
+            List<DepartmentDTO> departments = await ExecuteCollectionSqlQuery<DepartmentDTO>(_connection, getDepartmentsQuery, cancellationToken);
 
             return new()
             {

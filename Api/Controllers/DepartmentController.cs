@@ -53,8 +53,33 @@ namespace Api.Controllers
         {
             return SafeExecute(async () =>
             {
-                GetDepartmentsQuery query = new() {  };
+                GetDepartmentsQuery query = new();
                 GetDepartmentsQueryResult result = await _mediator.Send(query, cancellationToken);
+
+                return Ok(result);
+
+            }, cancellationToken);
+        }
+
+        [HttpGet("/{departmentId}")]
+        public Task<IActionResult> GetDepartmentInfo(int departmentId, CancellationToken cancellationToken)
+        {
+            return SafeExecute(async () =>
+            {
+                GetDepartmentInfoQuery query = new() { DepartmentId = departmentId };
+                GetDepartmentInfoQueryResult result = await _mediator.Send(query, cancellationToken);
+
+                if (!result.Success)
+                {
+                    if (!result.DepartmentExists)
+                    {
+                        return ToActionResult(new()
+                        {
+                            Code = ErrorCode.DepartmentNotFound,
+                            Message = "Department does not exist"
+                        });
+                    }
+                }
 
                 return Ok(result);
 
