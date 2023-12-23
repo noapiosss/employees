@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Contracts.Database
+namespace Contracts.DTO
 {
     public struct DepartmentInfoDTO
     {

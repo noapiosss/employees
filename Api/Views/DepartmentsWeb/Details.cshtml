@@ -1,0 +1,35 @@
+@model Contracts.DTO.DepartmentInfoDTO
+
+@{
+    ViewData["Title"] = @Model.Name;
+    Layout = "_Layout";
+}
+
+Id: @Model.Id <br>
+Name: @Model.Name <br>
+Total salary: @Model.TotalSalary <br>
+Min salary: @Model.MinSalary <br>
+Max salary: @Model.MaxSalary <br>
+Average salary: @Model.AvgSalary <br> <br><br>
+
+Employees:
+<table>
+    <thead>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Position</th>
+        <th>Salary</th>
+    </thead>
+
+    <tbody>
+        @foreach(Contracts.DTO.EmployeeDTO employee in Model.Eployees)
+        {
+            <tr>
+                <td>@employee.Id</td>
+                <td>@employee.LastName @employee.FirstName @employee.Patronymic</td>
+                <td>@employee.PositionName</td>
+                <td>@employee.Salary</td>
+            </tr>
+        }
+    </tbody>
+</table>

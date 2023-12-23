@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Contracts.Database;
+using Contracts.DTO;
 using Contracts.Http;
 using Domain.Base;
 using MediatR;

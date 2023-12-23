@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Contracts.Database;
+using Contracts.DTO;
 using Domain.Base;
 using MediatR;
 using Microsoft.Extensions.Logging;

@@ -1,0 +1,30 @@
+@model IList<Contracts.DTO.DepartmentDTO>
+
+@{
+    ViewData["Title"] = "Departments";
+    Layout = "_Layout";
+}
+
+@if(!Model.Any())
+{
+    <h1>No any result</h1>
+}
+else
+{    
+    <table>
+        <thead>
+            <th>Id</th>
+            <th>Name</th>
+        </thead>
+
+        <tbody>
+            @foreach(Contracts.DTO.DepartmentDTO department in Model)
+            {
+                <tr>
+                    <td>@department.Id</td>
+                    <td><a asp-area="" asp-controller="DepartmentsWeb" asp-action="Details" asp-route-departmentId=@department.Id>@department.Name</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

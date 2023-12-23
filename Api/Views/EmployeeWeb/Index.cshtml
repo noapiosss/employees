@@ -1,0 +1,36 @@
+@model IList<Contracts.DTO.EmployeeDTO>
+
+@{
+    ViewData["Title"] = "Employees";
+    Layout = "_Layout";
+}
+
+@if(!Model.Any())
+{
+    <h1>No any result</h1>
+}
+else
+{    
+    <table>
+        <thead>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Department</th>
+            <th>Position</th>
+            <th>Salary</th>
+        </thead>
+
+        <tbody>
+            @foreach(Contracts.DTO.EmployeeDTO employee in Model)
+            {
+                <tr>
+                    <td>@employee.Id</td>
+                    <td>@employee.LastName @employee.FirstName @employee.Patronymic</td>
+                    <td>@employee.DepartmentName</td>
+                    <td>@employee.PositionName</td>
+                    <td>@employee.Salary</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
