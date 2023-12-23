@@ -18,12 +18,6 @@ namespace Domain.Commands
     {
         public ICollection<Department> Departmens { get; init; }
         public ICollection<Position> Positions { get; init; }
-        // public DateOnly MinEmploymentDate { get; init; }
-        // public DateOnly MaxEmploymentDate { get; init; }
-        // public int MinAge { get; init; }
-        // public int MaxAge { get; init; }
-        // public decimal MinSalary { get; init; }
-        // public decimal MaxSalary { get; init; }
         public BoundFilterValues BoundFilterValues { get; init ;}
     }
 

@@ -90,12 +90,18 @@ namespace Api.Controllers
             }, cancellationToken);
         }
 
-        [HttpGet("/filtered")]
-        public Task<IActionResult> GetFilteredEmployees(CancellationToken cancellationToken)
+        [HttpPost("/filtered")]
+        public Task<IActionResult> GetFilteredEmployees([FromBody] GetFilteredEmployeesRequest request, CancellationToken cancellationToken)
         {
             return SafeExecute(async () =>
             {
-                GetFilteredEmployeesQuery query = new() {  };
+                GetFilteredEmployeesQuery query = new()
+                {
+                    DepartmentId = request.DepartmentId,
+                    PositionId = request.PositionId,
+                    BoundFilterValues = request.BoundFilterValues,
+                    SearchRequest = request.SearchRequest
+                };
                 GetFilteredEmployeesQueryResult result = await _mediator.Send(query, cancellationToken);
 
                 return Ok(result);
@@ -160,7 +166,7 @@ namespace Api.Controllers
             {
                 GenerateTestDataCommand command = new();
                 GenerateTestDataCommandResult result = await _mediator.Send(command, cancellationToken);
-                
+
                 return Ok();
 
             }, cancellationToken);

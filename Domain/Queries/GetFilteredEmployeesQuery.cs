@@ -35,6 +35,9 @@ namespace Domain.Commands
 
         protected override async Task<GetFilteredEmployeesQueryResult> HandleInternal(GetFilteredEmployeesQuery request, CancellationToken cancellationToken)
         {
+            DateOnly minBirthDate = DateOnly.FromDateTime(DateTime.Now.AddYears(-request.BoundFilterValues.MaxAge));
+            DateOnly maxBirthDate = DateOnly.FromDateTime(DateTime.Now.AddYears(-request.BoundFilterValues.MinAge));
+
             string getFilteredEmployeesQuery = 
             @$"
                 SELECT 
@@ -53,8 +56,39 @@ namespace Domain.Commands
                 JOIN employees ON department_position.employee_id=employees.id
                 JOIN positions ON department_position.position_id=positions.id
                 JOIN departments ON department_position.department_id=departments.id                
-                WHERE department_position.employee_id!=NULL
+                WHERE
+                    department_position.employee_id is NOT NULL AND
+                    employees.employment_date>='{DateOnly.FromDateTime(request.BoundFilterValues.MinEmploymentDate):yyyy-MM-dd}' AND
+                    employees.employment_date<='{DateOnly.FromDateTime(request.BoundFilterValues.MaxEmploymentDate):yyyy-MM-dd}' AND
+                    employees.birth_date>='{minBirthDate:yyyy-MM-dd}' AND
+                    employees.birth_date<='{maxBirthDate:yyyy-MM-dd}' AND
+                    employees.salary>={request.BoundFilterValues.MinSalary} AND
+                    employees.salary<={request.BoundFilterValues.MaxSalary}
             ";
+
+            if (request.DepartmentId != 0)
+            {
+                getFilteredEmployeesQuery += $" AND\n department_position.department_id={request.DepartmentId}";
+            }
+
+            if (request.PositionId !=0)
+            {
+                getFilteredEmployeesQuery += $" AND\n department_position.position_id={request.PositionId}";
+            }
+
+            if (!string.IsNullOrWhiteSpace(request.SearchRequest))
+            {
+                getFilteredEmployeesQuery +=
+                $@"
+                    AND
+                    (
+                        employees.first_name LIKE '%{request.SearchRequest}%' OR
+                        employees.last_name LIKE '%{request.SearchRequest}%' OR
+                        employees.patronymic LIKE '%{request.SearchRequest}%' OR
+                        employees.address LIKE '%{request.SearchRequest}%' OR
+                        employees.phone LIKE '%{request.SearchRequest}%'
+                    )";
+            }
 
             List<EmployeeDTO> employees = await ExecuteCollectionSqlQuery<EmployeeDTO>(_connection, getFilteredEmployeesQuery, cancellationToken);
 
