@@ -1,36 +1,133 @@
-@model IList<Contracts.DTO.EmployeeDTO>
+@model Domain.Commands.GetAllEmployeesQueryResult
 
 @{
     ViewData["Title"] = "Employees";
     Layout = "_Layout";
 }
 
-@if(!Model.Any())
+@inherits Helper<TModel>
+
+@if(!Model.Employees.Any())
 {
     <h1>No any result</h1>
 }
 else
 {    
-    <table>
+    <table class="employees-table">
         <thead>
-            <th>Id</th>
-            <th>Name</th>
-            <th>Department</th>
-            <th>Position</th>
-            <th>Salary</th>
+            <th class="employees-table-th">Name</th>
+            <th class="employees-table-th">Department</th>
+            <th class="employees-table-th">Position</th>
+            <th class="employees-table-th">Address</th>
+            <th class="employees-table-th">Phone</th>
+            <th class="employees-table-th">Birth Date</th>
+            <th class="employees-table-th">Employment Date</th>
+            <th class="employees-table-th">Salary</th>
+            <th class="employees-table-th"></th>
         </thead>
 
         <tbody>
-            @foreach(Contracts.DTO.EmployeeDTO employee in Model)
+            @{bool isOdd = true;}
+            @foreach(Contracts.DTO.EmployeeDTO employee in Model.Employees)
             {
-                <tr>
-                    <td>@employee.Id</td>
-                    <td>@employee.LastName @employee.FirstName @employee.Patronymic</td>
-                    <td>@employee.DepartmentName</td>
-                    <td>@employee.PositionName</td>
-                    <td>@employee.Salary</td>
+                string trClass = isOdd ? "employees-table-tr-odd" : "employees-table-tr-even";
+
+                <tr class=@trClass>
+                    <td class="employees-table-td">@employee.FirstName @employee.LastName @employee.Patronymic</td>
+                    <td class="employees-table-td">@employee.DepartmentName</td>
+                    <td class="employees-table-td">@employee.PositionName</td>
+                    <td class="employees-table-td">@employee.Address</td>
+                    <td class="employees-table-td">@employee.Phone</td>
+                    <td class="employees-table-td">@employee.BirthDate</td>
+                    <td class="employees-table-td">@employee.EmploymentDate</td>
+                    <td class="employees-table-td">@employee.Salary</td>
+                    <td class="employees-table-td">
+                        <a href="/EmployeeWeb/Edit/@employee.Id">
+                            <button class="edit-employee-btn">
+                                edit
+                            </button>
+                        </a>
+                    </td>
                 </tr>
+
+                isOdd = !isOdd;
             }
         </tbody>
     </table>
+
+    <br>
+
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            @if(Model.Page > 1)
+            {
+                <li class="page-item">
+                    <a class="page-link" href=@PaginationHref(ViewContext.HttpContext.Request.QueryString.Value, Model.Page-1) aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+
+                @if(Model.Page > 2)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href=@PaginationHref(ViewContext.HttpContext.Request.QueryString.Value, Model.Page-2)>
+                            @(Model.Page - 2)
+                        </a>
+                    </li>
+                }
+
+                <li class="page-item">
+                    <a class="page-link" href=@PaginationHref(ViewContext.HttpContext.Request.QueryString.Value, Model.Page-1)>
+                        @(Model.Page - 1)
+                    </a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item disabled">
+                    <a class="page-link" href="" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+            }
+
+            <li class="page-item disabled">
+                <a class="page-link" href="">
+                    @Model.Page
+                </a>
+            </li>
+
+            @if(Model.Page < Model.PagesCount)
+            {
+                <li class="page-item">
+                    <a class="page-link" href=@PaginationHref(ViewContext.HttpContext.Request.QueryString.Value, Model.Page+1)>
+                        @(Model.Page + 1)
+                    </a>
+                </li>
+
+                @if(Model.Page + 1 < Model.PagesCount)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href=@PaginationHref(ViewContext.HttpContext.Request.QueryString.Value, Model.Page+2)>
+                            @(Model.Page + 2)
+                        </a>
+                    </li>                
+                }
+
+                <li class="page-item">
+                    <a class="page-link" href=@PaginationHref(ViewContext.HttpContext.Request.QueryString.Value, Model.Page+1) aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item disabled">
+                    <a class="page-link" href="" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            }
+        </ul>
+    </nav>
 }

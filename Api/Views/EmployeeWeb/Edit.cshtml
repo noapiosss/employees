@@ -1,0 +1,14 @@
+@model Api.Models.EditEmployeeModel
+
+@{
+    ViewData["Title"] = $"{Model.Employee.FirstName} {Model.Employee.LastName} {Model.Employee.Patronymic}";
+    Layout = "_Layout";
+}
+
+Name: @Model.Employee.FirstName @Model.Employee.LastName @Model.Employee.Patronymic <br>
+Position: @Model.Employee.PositionName <br>
+Address: @Model.Employee.Address <br>
+Phone: @Model.Employee.Phone <br>
+Birth Date: @Model.Employee.BirthDate <br>
+Employment Date: @Model.Employee.EmploymentDate <br>
+Salary: @Model.Employee.Salary <br>

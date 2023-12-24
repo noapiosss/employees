@@ -13,23 +13,36 @@ Max salary: @Model.MaxSalary <br>
 Average salary: @Model.AvgSalary <br> <br><br>
 
 Employees:
-<table>
+<table class="employees-table">
     <thead>
-        <th>Id</th>
-        <th>Name</th>
-        <th>Position</th>
-        <th>Salary</th>
+        <th class="employees-table-th">Name</th>
+        <th class="employees-table-th">Position</th>
+        <th class="employees-table-th">Address</th>
+        <th class="employees-table-th">Phone</th>
+        <th class="employees-table-th">Birth Date</th>
+        <th class="employees-table-th">Employment Date</th>
+        <th class="employees-table-th">Salary</th>
+        <th class="employees-table-th"></th>
     </thead>
 
     <tbody>
+        @{bool isOdd = true;}
         @foreach(Contracts.DTO.EmployeeDTO employee in Model.Eployees)
         {
-            <tr>
-                <td>@employee.Id</td>
-                <td>@employee.LastName @employee.FirstName @employee.Patronymic</td>
-                <td>@employee.PositionName</td>
-                <td>@employee.Salary</td>
+            string trClass = isOdd ? "employees-table-tr-odd" : "employees-table-tr-even";
+
+            <tr class=@trClass>
+                <td class="employees-table-td">@employee.FirstName @employee.LastName @employee.Patronymic</td>
+                <td class="employees-table-td">@employee.PositionName</td>
+                <td class="employees-table-td">@employee.Address</td>
+                <td class="employees-table-td">@employee.Phone</td>
+                <td class="employees-table-td">@employee.BirthDate</td>
+                <td class="employees-table-td">@employee.EmploymentDate</td>
+                <td class="employees-table-td">@employee.Salary</td>
+                <td class="employees-table-td"><button class="edit-employee-btn">edit</button></td>
             </tr>
+
+            isOdd = !isOdd;
         }
     </tbody>
 </table>
