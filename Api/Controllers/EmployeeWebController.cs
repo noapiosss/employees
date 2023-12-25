@@ -62,14 +62,15 @@ namespace Api.Controllers
             return View("Index", model);
         }
 
-        public async Task<IActionResult> Search([FromForm] GetFilteredEmployeesRequest request, [FromQuery] int page = 1, CancellationToken cancellationToken = default)
+        [HttpPost]
+        public async Task<IActionResult> Employees([FromForm] EmployeesViewModel request, [FromQuery] int page = 1, CancellationToken cancellationToken = default)
         {
             GetFilteredEmployeesQuery query = new()
             {
-                DepartmentId = request.DepartmentId,
-                PositionId = request.PositionId,
-                BoundFilterValues = request.BoundFilterValues,
-                SearchRequest = request.SearchRequest,
+                DepartmentId = request.Filters.DepartmentId,
+                PositionId = request.Filters.PositionId,
+                BoundFilterValues = request.Filters.BoundFilterValues,
+                SearchRequest = request.Filters.SearchRequest,
                 Page = page,
                 PerPage = _perPage
             };

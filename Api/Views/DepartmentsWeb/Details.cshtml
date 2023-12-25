@@ -5,12 +5,16 @@
     Layout = "_Layout";
 }
 
-Id: @Model.Id <br>
-Name: @Model.Name <br>
-Total salary: @Model.TotalSalary <br>
-Min salary: @Model.MinSalary <br>
-Max salary: @Model.MaxSalary <br>
-Average salary: @Model.AvgSalary <br> <br><br>
+<div class="department-name">@Model.Name department</div>
+<b>Employees count:</b> @Model.Employees.Count <br>
+<b>Average age:</b> @Math.Round(Model.AvgAge, 2) <br>
+<b>Vacancies count:</b> @Model.VacanciesCount <br>
+<b>Total salary:</b> @Model.TotalSalary <br>
+<b>Mininal salary:</b> @Model.MinSalary <br>
+<b>Maximal salary:</b> @Model.MaxSalary <br>
+<b>Average salary:</b> @Math.Round(Model.AvgSalary,2) <br>
+<button class="download-btn" id="download-btn" onclick="createAndDownloadTxt('@Model.ToString()')">download .txt</button> <br><br>
+
 
 Employees:
 <table class="employees-table">
@@ -27,11 +31,11 @@ Employees:
 
     <tbody>
         @{bool isOdd = true;}
-        @foreach(Contracts.DTO.EmployeeDTO employee in Model.Eployees)
+        @foreach(Contracts.DTO.EmployeeDTO employee in Model.Employees)
         {
-            string trClass = isOdd ? "employees-table-tr-odd" : "employees-table-tr-even";
+            string trClass = isOdd ? "odd" : "even";
 
-            <tr class=@trClass>
+            <tr class="employees-table-tr @trClass">
                 <td class="employees-table-td">@employee.FirstName @employee.LastName @employee.Patronymic</td>
                 <td class="employees-table-td">@employee.PositionName</td>
                 <td class="employees-table-td">@employee.Address</td>
@@ -52,3 +56,6 @@ Employees:
         }
     </tbody>
 </table>
+
+
+<script src="~/js/download-txt.js" asp-append-version="true"></script>

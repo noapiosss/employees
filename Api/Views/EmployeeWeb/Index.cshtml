@@ -7,7 +7,7 @@
 
 @inherits Helper<TModel>
 
-<form asp-action="Search" class="search-fileters">
+<form asp-action="Employees" class="search-fileters">
     search text
     <div class="form-group row">
         <input asp-for="Filters.SearchRequest" type="text" class="form-control">
@@ -152,9 +152,9 @@ else
             @{bool isOdd = true;}
             @foreach(Contracts.DTO.EmployeeDTO employee in Model.Employees)
             {
-                string trClass = isOdd ? "employees-table-tr-odd" : "employees-table-tr-even";
+                string trClass = isOdd ? "odd" : "even";
 
-                <tr class=@trClass>
+                <tr class="employees-table-tr @trClass">
                     <td class="employees-table-td">@employee.FirstName @employee.LastName @employee.Patronymic</td>
                     <td class="employees-table-td">@employee.DepartmentName</td>
                     <td class="employees-table-td">@employee.PositionName</td>

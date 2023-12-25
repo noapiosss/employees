@@ -11,19 +11,22 @@
 }
 else
 {    
-    <table>
+    <table class="departments-table">
         <thead>
-            <th>Id</th>
-            <th>Name</th>
+            <th class="departments-table-th">Departments</th>
         </thead>
 
         <tbody>
+            @{bool isOdd = true;}
             @foreach(Contracts.DTO.DepartmentDTO department in Model)
             {
-                <tr>
-                    <td>@department.Id</td>
-                    <td><a asp-area="" asp-controller="DepartmentsWeb" asp-action="Details" asp-route-departmentId=@department.Id>@department.Name</a></td>
-                </tr>
+                string trClass = isOdd ? "departments-table-tr-odd" : "departments-table-tr-even";                
+                
+                    <tr class=@trClass onclick="document.location = '/DepartmentsWeb/Details?departmentId=@department.Id';">
+                        <td  class="departments-table-td">@department.Name</td>
+                    </tr>               
+            
+                isOdd = !isOdd;
             }
         </tbody>
     </table>

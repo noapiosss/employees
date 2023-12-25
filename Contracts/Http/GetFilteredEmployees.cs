@@ -2,7 +2,7 @@ using System;
 
 namespace Contracts.Http
 {
-    public struct GetFilteredEmployeesRequest
+    public class GetFilteredEmployeesRequest
     {
         public int DepartmentId { get; init; }
         public int PositionId { get; init; }
@@ -10,7 +10,7 @@ namespace Contracts.Http
         public string SearchRequest { get; init; }
     }   
 
-    public struct BoundFilterValues
+    public class BoundFilterValues
     {
         public DateTime MinEmploymentDate { get; init; }
         public DateTime MaxEmploymentDate { get; init; }

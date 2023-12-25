@@ -48,20 +48,6 @@ namespace Domain.Commands
                     DepartmentExists = departmentExists
                 };
             }
-
-            string getDepartmentSalaryInfoQuery =
-            $@"
-                SELECT
-                    SUM(employees.salary) as total_salary,
-                    MIN(employees.salary) as min_salary,
-                    MAX(employees.salary) as max_salary,
-                    AVG(employees.salary) as avg_salary
-                FROM department_position
-                LEFT JOIN employees ON employees.id=department_position.employee_id
-                WHERE
-                    department_position.employee_id IS NOT NULL AND
-                    department_position.department_id={request.DepartmentId}
-            ";            
             
             string getDepartmentQuery =
             $@"
@@ -70,6 +56,30 @@ namespace Domain.Commands
                     departments.name as name
                 FROM departments
                 WHERE departments.id={request.DepartmentId}
+            ";
+
+            string getDepartmentSalaryInfoQuery =
+            $@"
+                SELECT
+                    SUM(employees.salary) as total_salary,
+                    MIN(employees.salary) as min_salary,
+                    MAX(employees.salary) as max_salary,
+                    AVG(employees.salary) as avg_salary,
+                    AVG(EXTRACT(YEAR FROM AGE(CURRENT_DATE, employees.birth_date))) as avg_age
+                FROM department_position
+                LEFT JOIN employees ON employees.id=department_position.employee_id
+                WHERE
+                    department_position.employee_id IS NOT NULL AND
+                    department_position.department_id={request.DepartmentId}
+            ";            
+            
+            string getVacanciesCountQuery =
+            $@"
+                SELECT COUNT(*)
+                FROM department_position
+                WHERE
+                    department_position.employee_id IS NULL AND
+                    department_position.department_id={request.DepartmentId}
             ";
 
             string getDepartmentEmployeesQuery =
@@ -99,7 +109,8 @@ namespace Domain.Commands
             DepartmentInfoDTO departmentInfo = await ExecuteSqlQuery<DepartmentInfoDTO>(_connection, getDepartmentSalaryInfoQuery, cancellationToken);
             departmentInfo.Id = departmentDTO.Id;
             departmentInfo.Name = departmentDTO.Name;
-            departmentInfo.Eployees = await ExecuteCollectionSqlQuery<EmployeeDTO>(_connection, getDepartmentEmployeesQuery, cancellationToken);
+            departmentInfo.Employees = await ExecuteCollectionSqlQuery<EmployeeDTO>(_connection, getDepartmentEmployeesQuery, cancellationToken);
+            departmentInfo.VacanciesCount = await ExecuteSqlQuery<int>(_connection, getVacanciesCountQuery, cancellationToken);
 
             return new()
             {

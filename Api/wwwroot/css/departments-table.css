@@ -1,10 +1,10 @@
-.employees-table
+.departments-table
 {
     width: 100%;
     border-radius: 5px;
 }
 
-.employees-table-th
+.departments-table-th
 {
     background-color: rgb(136, 136, 136);
     color: white;
@@ -13,9 +13,12 @@
     
     padding-left: 5px;
     padding-right: 5px;
+
+    text-align: center;
+    font-size: larger;
 }
 
-.employees-table-td
+.departments-table-td
 {
     border: 1px solid rgb(184, 184, 184);
     border-left: 0;
@@ -23,36 +26,22 @@
 
     padding-left: 5px;
     padding-right: 5;
+
+    text-align: center;
 }
 
-.odd
+.departments-table-tr-odd
 {
     background-color: rgb(255, 255, 255);
 }
 
-.even
+.departments-table-tr-even
 {
     background-color: rgb(236, 236, 236);
 }
 
-.odd:hover, .even:hover
+.departments-table-tr-odd:hover, .departments-table-tr-even:hover
 {
     background-color: rgb(218, 218, 218);
-}
-
-.edit-employee-btn
-{
-    border: 0;
-    border-radius: 5px;
-    color: white;
-    background-color: rgb(133, 133, 133);
-
-    
-    padding-left: 10px;
-    padding-right: 10px;
-}
-
-.edit-employee-btn:hover
-{
-    background-color: rgb(88, 88, 88);
+    cursor: pointer;
 }

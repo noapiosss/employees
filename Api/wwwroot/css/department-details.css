@@ -1,0 +1,22 @@
+.department-name
+{
+    font-size: xx-large;
+}
+
+.download-btn
+{
+    margin-top: 10px;
+    border: 0;
+    border-radius: 5px;
+    color: white;
+    background-color: rgb(133, 133, 133);
+
+    
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.download-btn:hover
+{
+    background-color: rgb(88, 88, 88);
+}
