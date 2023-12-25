@@ -7,7 +7,14 @@ using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.Configure<AppConfiguration>(builder.Configuration.GetSection("AppConfig"));
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.Configure<AppConfiguration>(builder.Configuration.GetSection("AppConfig"));
+}
+else if (builder.Environment.IsProduction())
+{
+    builder.Services.Configure<AppConfiguration>(builder.Configuration.GetSection("APP"));
+}
 
 builder.Services.AddRazorPages();
 builder.Services.AddControllers();

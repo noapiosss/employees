@@ -1,0 +1,33 @@
+version: "3.9"
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      APP__ConnectionString: Uid=postgres;Pwd=123456;Server=db;Port=5432;Database=employees_db;
+      ASPNETCORE_URLS: http://+:80
+    ports:
+      - "8080:80"  
+    expose:
+      - "80"
+    depends_on:
+      - db
+
+  db:    
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: employees_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./employees_backup.sql:/docker-entrypoint-initdb.d/employees_backup.sql
+
+networks:
+  default:
+    name: employees_network

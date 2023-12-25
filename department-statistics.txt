@@ -1,0 +1,279 @@
+HR department
+Employees count: 27
+Average age: 31.518518
+Vacancies count: 1
+Total salary: 927790.99
+Mininal salary: 2892.24
+Maximal salary: 89456.95
+Average salary: 34362.629259259259
+------------------------------------------
+Id: 196
+Name: Aide Sessom Vito
+Department: 
+Position: Manager
+Salary: 68446
+Phone: 044-705-67-43
+Address: AideSessom0@gmail.com
+Birth date: 1986-06-08
+Employment date: 1986-05-06
+------------------------------------------
+Id: 142
+Name: Alishia Hauptman Adan
+Department: 
+Position: President
+Salary: 12210.49
+Phone: 044-231-77-83
+Address: AlishiaHauptman0@gmail.com
+Birth date: 1995-03-24
+Employment date: 1984-01-14
+------------------------------------------
+Id: 185
+Name: Brandon Zazozdor Tanner
+Department: 
+Position: Accountant
+Salary: 33909.54
+Phone: 044-835-18-70
+Address: BrandonZazozdor0@gmail.com
+Birth date: 1989-08-15
+Employment date: 1982-10-02
+------------------------------------------
+Id: 60
+Name: Carolyne Torre Alair
+Department: 
+Position: Advisor
+Salary: 40840.7
+Phone: 044-339-47-32
+Address: CarolyneTorre0@gmail.com
+Birth date: 1999-08-07
+Employment date: 1998-08-14
+------------------------------------------
+Id: 70
+Name: Clement Reeks Matty
+Department: 
+Position: Manager
+Salary: 4765.37
+Phone: 044-416-29-24
+Address: ClementReeks0@gmail.com
+Birth date: 1989-06-14
+Employment date: 1987-06-19
+------------------------------------------
+Id: 97
+Name: Dotty Kerwood Ferris
+Department: 
+Position: Accountant
+Salary: 53475.64
+Phone: 044-346-56-45
+Address: DottyKerwood0@gmail.com
+Birth date: 1990-04-21
+Employment date: 1988-09-05
+------------------------------------------
+Id: 131
+Name: Eliz Kennedy Trever
+Department: 
+Position: Advisor
+Salary: 61050.02
+Phone: 044-157-27-88
+Address: ElizKennedy0@gmail.com
+Birth date: 1995-07-04
+Employment date: 1998-04-06
+------------------------------------------
+Id: 162
+Name: Eliz Bevelle Rossie
+Department: 
+Position: Accountant
+Salary: 14526.22
+Phone: 044-410-39-46
+Address: ElizBevelle0@gmail.com
+Birth date: 1995-06-15
+Employment date: 1983-05-05
+------------------------------------------
+Id: 71
+Name: Elvia Jubinville Jory
+Department: 
+Position: Accountant
+Salary: 12058.01
+Phone: 044-439-84-83
+Address: ElviaJubinville0@gmail.com
+Birth date: 1986-11-11
+Employment date: 1995-06-23
+------------------------------------------
+Id: 163
+Name: Enoch Ned Jessey
+Department: 
+Position: Developer
+Salary: 26142.36
+Phone: 044-775-78-75
+Address: EnochNed0@gmail.com
+Birth date: 1998-04-23
+Employment date: 1981-08-15
+------------------------------------------
+Id: 191
+Name: Felisa Spoonamore Seumas
+Department: 
+Position: President
+Salary: 4859.79
+Phone: 044-608-97-70
+Address: FelisaSpoonamore0@gmail.com
+Birth date: 1997-11-19
+Employment date: 1998-06-11
+------------------------------------------
+Id: 105
+Name: Gigi Orrantia Maje
+Department: 
+Position: Customer service
+Salary: 52645.4
+Phone: 044-242-34-94
+Address: GigiOrrantia0@gmail.com
+Birth date: 1986-07-17
+Employment date: 1990-04-03
+------------------------------------------
+Id: 200
+Name: Griselda Troublefield Cletis
+Department: 
+Position: Sales
+Salary: 28416.45
+Phone: 044-251-29-86
+Address: GriseldaTroublefield0@gmail.com
+Birth date: 1994-05-01
+Employment date: 1981-09-18
+------------------------------------------
+Id: 99
+Name: Harriette Cimo Haroun
+Department: 
+Position: Customer service
+Salary: 55447.15
+Phone: 044-114-57-25
+Address: HarrietteCimo0@gmail.com
+Birth date: 1981-11-12
+Employment date: 1980-01-19
+------------------------------------------
+Id: 178
+Name: Jennifer Mestad Perren
+Department: 
+Position: President
+Salary: 50026.9
+Phone: 044-741-75-65
+Address: JenniferMestad0@gmail.com
+Birth date: 1991-03-12
+Employment date: 1980-04-23
+------------------------------------------
+Id: 84
+Name: Lashon Buice Ezra
+Department: 
+Position: Executive
+Salary: 61813.62
+Phone: 044-115-96-24
+Address: LashonBuice0@gmail.com
+Birth date: 1992-06-07
+Employment date: 1997-11-15
+------------------------------------------
+Id: 22
+Name: Lesley Sofer Kelley
+Department: 
+Position: Developer
+Salary: 2892.24
+Phone: 044-272-15-39
+Address: LesleySofer0@gmail.com
+Birth date: 1980-10-08
+Employment date: 1986-02-22
+------------------------------------------
+Id: 26
+Name: Lezlie Kotonski Filippo
+Department: 
+Position: Sales
+Salary: 15452.87
+Phone: 044-380-68-13
+Address: LezlieKotonski0@gmail.com
+Birth date: 1990-03-22
+Employment date: 1981-09-22
+------------------------------------------
+Id: 34
+Name: Lorina Abdella Bondon
+Department: 
+Position: Advisor
+Salary: 64138.15
+Phone: 044-656-15-15
+Address: LorinaAbdella0@gmail.com
+Birth date: 1993-06-24
+Employment date: 1985-07-16
+------------------------------------------
+Id: 102
+Name: Lovie Boufford Alaster
+Department: 
+Position: Customer service
+Salary: 5374.56
+Phone: 044-881-83-65
+Address: LovieBoufford0@gmail.com
+Birth date: 1990-11-08
+Employment date: 1996-11-09
+------------------------------------------
+Id: 145
+Name: Lynelle Bravata Humphrey
+Department: 
+Position: Developer
+Salary: 26479.94
+Phone: 044-881-88-80
+Address: LynelleBravata0@gmail.com
+Birth date: 1983-07-24
+Employment date: 1989-07-01
+------------------------------------------
+Id: 188
+Name: Patria Bisesi Stephanus
+Department: 
+Position: Accountant
+Salary: 16103.61
+Phone: 044-704-62-62
+Address: PatriaBisesi0@gmail.com
+Birth date: 1995-10-07
+Employment date: 1986-06-06
+------------------------------------------
+Id: 88
+Name: Quincy Gleisner Frants
+Department: 
+Position: Accountant
+Salary: 33375.48
+Phone: 044-672-98-36
+Address: QuincyGleisner0@gmail.com
+Birth date: 1996-09-15
+Employment date: 1995-10-04
+------------------------------------------
+Id: 129
+Name: Rolf Pasley ErvIn
+Department: 
+Position: Developer
+Salary: 52559.09
+Phone: 044-428-90-44
+Address: RolfPasley0@gmail.com
+Birth date: 1989-05-10
+Employment date: 1994-01-03
+------------------------------------------
+Id: 116
+Name: Sadie Krage Torrence
+Department: 
+Position: Manager
+Salary: 24260.52
+Phone: 044-408-62-12
+Address: SadieKrage0@gmail.com
+Birth date: 1999-10-15
+Employment date: 1989-09-10
+------------------------------------------
+Id: 35
+Name: Taunya Gnas Wyndham
+Department: 
+Position: Sales
+Salary: 17063.92
+Phone: 044-579-26-48
+Address: TaunyaGnas0@gmail.com
+Birth date: 1995-05-03
+Employment date: 1992-08-24
+------------------------------------------
+Id: 144
+Name: Thad Strasters Andras
+Department: 
+Position: Customer service
+Salary: 89456.95
+Phone: 044-551-27-15
+Address: ThadStrasters0@gmail.com
+Birth date: 1997-09-21
+Employment date: 1980-08-24
+------------------------------------------

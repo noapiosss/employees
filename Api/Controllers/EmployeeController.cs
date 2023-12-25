@@ -216,8 +216,8 @@ namespace Api.Controllers
             }, cancellationToken);
         }
 
-        [HttpGet("/test")]
-        public Task<IActionResult> Test(CancellationToken cancellationToken)
+        [HttpGet("/generate-test-data")]
+        public Task<IActionResult> GenerateTestData(CancellationToken cancellationToken)
         {
             return SafeExecute(async () =>
             {
