@@ -11,8 +11,8 @@ namespace Domain.Commands
 {
     public class GetAllEmployeesQuery : IRequest<GetAllEmployeesQueryResult>
     {
-        public int Page { get; set; }
-        public int PerPage { get; set; }
+        public int Page { get; init; }
+        public int PerPage { get; init; }
     }
 
     public class GetAllEmployeesQueryResult

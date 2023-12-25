@@ -1,4 +1,4 @@
-@model Domain.Commands.GetAllEmployeesQueryResult
+@model Api.Models.EmployeesViewModel
 
 @{
     ViewData["Title"] = "Employees";
@@ -6,6 +6,128 @@
 }
 
 @inherits Helper<TModel>
+
+<form asp-action="Search" class="search-fileters">
+    search text
+    <div class="form-group row">
+        <input asp-for="Filters.SearchRequest" type="text" class="form-control">
+    </div>
+
+     
+    <div class="form-group row">
+        <div class="col">
+            Department   
+            <select asp-for="Filters.DepartmentId" class="form-select">
+                @for(int i = 0; i < Model.BoundValues.Departmens.Count; ++i)
+                {
+                    if (i == 0)
+                    {
+                        <option value=@Model.BoundValues.Departmens[i].Id selected>@Model.BoundValues.Departmens[i].Name</option>
+                    }
+                    else
+                    {
+                        <option value=@Model.BoundValues.Departmens[i].Id >@Model.BoundValues.Departmens[i].Name</option>
+                    }
+                }
+            </select>
+        </div>
+
+        <div class="col">
+            Position
+            <select asp-for="Filters.PositionId" class="form-select">
+                @for(int i = 0; i < Model.BoundValues.Positions.Count; ++i)
+                {
+                    if (i == 0)
+                    {
+                        <option value=@Model.BoundValues.Positions[i].Id selected>@Model.BoundValues.Positions[i].Name</option>
+                    }
+                    else
+                    {
+                        <option value=@Model.BoundValues.Positions[i].Id >@Model.BoundValues.Positions[i].Name</option>
+                    }
+                }
+            </select>
+        </div>   
+    </div>
+
+    <div class="form-group row">
+        <div class="col">
+            min age
+            <input asp-for="Filters.BoundFilterValues.MinAge"
+                   type="number"
+                   min=@Model.BoundValues.BoundFilterValues.MinAge
+                   max=@Model.BoundValues.BoundFilterValues.MaxAge
+                   value=@Model.BoundValues.BoundFilterValues.MinAge
+                   class="form-control">
+        </div>
+        
+        <div class="col">
+            max age
+            <input asp-for="Filters.BoundFilterValues.MaxAge"
+                   type="number"
+                   min=@Model.BoundValues.BoundFilterValues.MinAge
+                   max=@Model.BoundValues.BoundFilterValues.MaxAge
+                   value=@Model.BoundValues.BoundFilterValues.MaxAge
+                   class="form-control">
+        </div>
+    </div>
+    
+    <div class="form-group row">
+        <div class="col">
+        min emp date 
+        <input asp-for="Filters.BoundFilterValues.MinEmploymentDate"
+               type="date"
+               min=@Model.BoundValues.BoundFilterValues.MinEmploymentDate.ToString("yyyy-MM-dd")
+               max=@Model.BoundValues.BoundFilterValues.MaxEmploymentDate.ToString("yyyy-MM-dd")
+               value=@Model.BoundValues.BoundFilterValues.MinEmploymentDate.ToString("yyyy-MM-dd")
+               class="form-control">
+        </div>
+                           
+        <div class="col">
+        max emp date
+        <input asp-for="Filters.BoundFilterValues.MaxEmploymentDate"
+               type="date"
+               min=@Model.BoundValues.BoundFilterValues.MinEmploymentDate.ToString("yyyy-MM-dd")
+               max=@Model.BoundValues.BoundFilterValues.MaxEmploymentDate.ToString("yyyy-MM-dd")
+               value=@Model.BoundValues.BoundFilterValues.MaxEmploymentDate.ToString("yyyy-MM-dd")
+               class="form-control">
+        </div>
+    </div>
+
+
+    
+    <div class="form-group row">
+        <div class="col">
+        min Salary
+        <input asp-for="Filters.BoundFilterValues.MinSalary"
+               type="number" 
+               min=@Model.BoundValues.BoundFilterValues.MinSalary
+               max=@Model.BoundValues.BoundFilterValues.MaxSalary
+               value=@Model.BoundValues.BoundFilterValues.MinSalary
+               step="any"
+               class="form-control">
+        </div>
+
+        <div class="col">
+        max Salary
+        <input asp-for="Filters.BoundFilterValues.MaxSalary"
+               type="number"
+               min=@Model.BoundValues.BoundFilterValues.MinSalary
+               max=@Model.BoundValues.BoundFilterValues.MaxSalary
+               value=@Model.BoundValues.BoundFilterValues.MaxSalary
+               step="any"
+               class="form-control">
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <button type="submit" class="edit-employee-btn" >search</button>
+    </div>
+</form>
+
+<br>
+<br>
+<br>
 
 @if(!Model.Employees.Any())
 {

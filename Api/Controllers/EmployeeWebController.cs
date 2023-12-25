@@ -1,11 +1,13 @@
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 using Api.Models;
 using Contracts.Database;
 using Contracts.DTO;
+using Contracts.Http;
 using Domain.Commands;
 using MediatR;
 
@@ -23,9 +25,9 @@ namespace Api.Controllers
             _mediator = mediator;
         }
 
-        public IActionResult Index(ICollection<EmployeeDTO> employees)
+        public IActionResult Index(EmployeesViewModel employeesViewModel)
         {
-            return View(employees);
+            return View(employeesViewModel);
         }
 
         public async Task<IActionResult> Employees([FromQuery] int page = 1, CancellationToken cancellationToken = default)
@@ -38,7 +40,62 @@ namespace Api.Controllers
 
             GetAllEmployeesQueryResult result = await _mediator.Send(query, cancellationToken);
 
-            return View("Index", result);
+            GetFiltersQuery filtersQuery = new();
+            GetFiltersQueryResult filtersResult = await _mediator.Send(filtersQuery, cancellationToken);
+
+            BoundValues boundValues = new()
+            {
+                BoundFilterValues = filtersResult.BoundFilterValues,
+                Departmens = filtersResult.Departmens.ToList(),
+                Positions = filtersResult.Positions.ToList()
+            };
+
+            EmployeesViewModel model = new()
+            {
+                Employees = result.Employees.ToList(),
+                BoundValues = boundValues,
+                Page = result.Page,
+                PerPage = result.PerPage,
+                PagesCount = result.PagesCount              
+            };
+
+            return View("Index", model);
+        }
+
+        public async Task<IActionResult> Search([FromForm] GetFilteredEmployeesRequest request, [FromQuery] int page = 1, CancellationToken cancellationToken = default)
+        {
+            GetFilteredEmployeesQuery query = new()
+            {
+                DepartmentId = request.DepartmentId,
+                PositionId = request.PositionId,
+                BoundFilterValues = request.BoundFilterValues,
+                SearchRequest = request.SearchRequest,
+                Page = page,
+                PerPage = _perPage
+            };
+
+            GetFilteredEmployeesQueryResult result = await _mediator.Send(query, cancellationToken);
+
+            GetFiltersQuery filtersQuery = new();
+            GetFiltersQueryResult filtersResult = await _mediator.Send(filtersQuery, cancellationToken);
+
+            BoundValues boundValues = new()
+            {
+                BoundFilterValues = filtersResult.BoundFilterValues,
+                Departmens = filtersResult.Departmens.ToList(),
+                Positions = filtersResult.Positions.ToList()
+            };
+
+            EmployeesViewModel model = new()
+            {
+                Employees = result.Employees.ToList(),
+                BoundValues = boundValues,
+                Page = result.Page,
+                PerPage = result.PerPage,
+                PagesCount = result.PagesCount              
+            };
+
+            return View("Index", model);
         }
 
         public async Task<IActionResult> Edit(int id, CancellationToken cancellationToken = default)
