@@ -46,7 +46,7 @@ namespace Api.Controllers
             BoundValues boundValues = new()
             {
                 BoundFilterValues = filtersResult.BoundFilterValues,
-                Departmens = filtersResult.Departmens.ToList(),
+                Departments = filtersResult.Departmens.ToList(),
                 Positions = filtersResult.Positions.ToList()
             };
 
@@ -83,7 +83,7 @@ namespace Api.Controllers
             BoundValues boundValues = new()
             {
                 BoundFilterValues = filtersResult.BoundFilterValues,
-                Departmens = filtersResult.Departmens.ToList(),
+                Departments = filtersResult.Departmens.ToList(),
                 Positions = filtersResult.Positions.ToList()
             };
 
@@ -91,6 +91,7 @@ namespace Api.Controllers
             {
                 Employees = result.Employees.ToList(),
                 BoundValues = boundValues,
+                Filters = request.Filters,
                 Page = result.Page,
                 PerPage = result.PerPage,
                 PagesCount = result.PagesCount              
@@ -103,6 +104,20 @@ namespace Api.Controllers
         {
             GetEmployeeByIdQuery employeeByIdQuery = new() { Id = id };
             GetEmployeeByIdQueryResult employeeResult = await _mediator.Send(employeeByIdQuery, cancellationToken);
+
+            if (!employeeResult.Success)
+            {
+                if (!employeeResult.EmployeeExists)
+                {
+                    ErrorResponse errorResponse = new()
+                    {
+                        Code = ErrorCode.EmployeeNotFound,
+                        Message = "Employee does not exists"
+                    };
+
+                    return RedirectToAction("Error", "DepartmentsWeb", new { errorResponse });
+                }
+            }
 
             GetDepartmentsQuery departmentsQuery = new();
             GetDepartmentsQueryResult departmentsResult = await _mediator.Send(departmentsQuery, cancellationToken);
@@ -132,13 +147,49 @@ namespace Api.Controllers
             
             EditEmployeeCommandResult result = await _mediator.Send(command, cancellationToken);
 
+            if (!result.Success)
+            {
+                if (!result.EmployeeExists)
+                {
+                    ErrorResponse errorResponse = new()
+                    {
+                        Code = ErrorCode.EmployeeNotFound,
+                        Message = "Employee does not exists"
+                    };
+
+                    return RedirectToAction("Error", "DepartmentsWeb", new { errorResponse });
+                }
+
+                if (!result.DepartmentExists)
+                {
+                    ErrorResponse errorResponse = new()
+                    {
+                        Code = ErrorCode.DepartmentNotFound,
+                        Message = "Department does not exists"
+                    };
+
+                    return RedirectToAction("Error", "DepartmentsWeb", new { errorResponse });
+                }
+
+                if (!result.PositionExists)
+                {
+                    ErrorResponse errorResponse = new()
+                    {
+                        Code = ErrorCode.PositionNotFound,
+                        Message = "Position does not exists"
+                    };
+
+                    return RedirectToAction("Error", "DepartmentsWeb", new { errorResponse });
+                }
+            }
+
             return RedirectToAction("Details", "DepartmentsWeb", new { departmentId });
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        public IActionResult Error(ErrorResponse errorResponse)
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View(new ErrorViewModel { ErrorCode = (int)errorResponse.Code / 100, Message = errorResponse.Message });
         }
     }
 }

@@ -16,7 +16,7 @@ namespace Api.Models
 
     public class BoundValues
     {
-        public List<DepartmentDTO> Departmens { get; init; }
+        public List<DepartmentDTO> Departments { get; init; }
         public List<PositionDTO> Positions { get; init; }
         public BoundFilterValues BoundFilterValues { get; init ;}
     }

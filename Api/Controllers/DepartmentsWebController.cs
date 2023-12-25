@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 using Api.Models;
 using Contracts.DTO;
+using Contracts.Http;
 using Domain.Commands;
 using MediatR;
 
@@ -39,13 +40,27 @@ namespace Api.Controllers
             GetDepartmentInfoQuery query = new() { DepartmentId = departmentId };
             GetDepartmentInfoQueryResult result = await _mediator.Send(query, cancellationToken);
 
+            if (!result.Success)
+            {
+                if (!result.DepartmentExists)
+                {
+                    ErrorResponse errorResponse = new()
+                    {
+                        Code = ErrorCode.DepartmentNotFound,
+                        Message = "Department does not exists"
+                    };
+
+                    return RedirectToAction("Error", "DepartmentsWeb", new { errorResponse });
+                }
+            }
+
             return View(result.DepartmentInfo);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        public IActionResult Error(ErrorResponse errorResponse)
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View(new ErrorViewModel { ErrorCode = (int)errorResponse.Code / 100, Message = errorResponse.Message });
         }
     }
 }
