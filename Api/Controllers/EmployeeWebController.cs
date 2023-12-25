@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Api.Models;
+using Contracts.Database;
 using Contracts.DTO;
 using Domain.Commands;
 using MediatR;
@@ -59,6 +60,21 @@ namespace Api.Controllers
             };
 
             return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit([FromForm] Employee employee, int departmentId, int positionId, CancellationToken cancellationToken)
+        {
+            EditEmployeeCommand command = new()
+            {
+                Employee = employee,
+                DepartmentId = departmentId,
+                PositionId = positionId
+            };
+            
+            EditEmployeeCommandResult result = await _mediator.Send(command, cancellationToken);
+
+            return RedirectToAction("Details", "DepartmentsWeb", new { departmentId });
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

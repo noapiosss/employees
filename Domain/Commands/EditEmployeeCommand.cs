@@ -36,17 +36,17 @@ namespace Domain.Commands
         {
             string employeeExistsQuery =
             $@"
-                SELECT EXISTS(SELECT 1 FROM employees WHERE id='{request.Employee.Id}')
+                SELECT EXISTS(SELECT 1 FROM employees WHERE id={request.Employee.Id})
             ";
 
             string departmentExistsQuery =
             $@"
-                SELECT EXISTS(SELECT 1 FROM departments WHERE id='{request.DepartmentId}')
+                SELECT EXISTS(SELECT 1 FROM departments WHERE id={request.DepartmentId})
             ";
 
             string positionExistsQuery =
             $@"
-                SELECT EXISTS(SELECT 1 FROM positions WHERE id='{request.PositionId}')
+                SELECT EXISTS(SELECT 1 FROM positions WHERE id={request.PositionId})
             ";
 
             bool employeeExists = await ExecuteSqlQuery<bool>(_connection, employeeExistsQuery, cancellationToken);
@@ -63,23 +63,85 @@ namespace Domain.Commands
                     PositionExists = positionExists
                 };
             }
-            
-            string removeFromPerviousPositionQuery = 
+
+            string getCurrentDepartmentPositionQuery = 
             $@"
-                UPDATE department_position
-                SET
-                    employee_id=NULL
+                SELECT 
+                    department_id,
+                    position_id,
+                    employee_id
+                FROM department_position
                 WHERE
-                    department_id={request.DepartmentId} AND
-                    position_id={request.PositionId} AND
                     employee_id={request.Employee.Id}
             ";
 
-            string createDepartmentPositioQuery =
-            $@"
-                INSERT INTO department_position(department_id, position_id, employee_id)
-                VALUES ({request.DepartmentId}, {request.PositionId}, {request.Employee.Id})
-            ";
+            DepartmentPosition currentDepartmentPosition = await ExecuteSqlQuery<DepartmentPosition>(_connection, getCurrentDepartmentPositionQuery, cancellationToken);
+            
+            if (request.DepartmentId != currentDepartmentPosition.DepartmentId || request.PositionId != currentDepartmentPosition.PositionId)
+            {
+                string removeFromPerviousPositionQuery = 
+                $@"
+                    UPDATE department_position
+                    SET
+                        employee_id=NULL
+                    WHERE
+                        department_id={currentDepartmentPosition.DepartmentId} AND
+                        position_id={currentDepartmentPosition.PositionId} AND
+                        employee_id={request.Employee.Id}
+                ";
+
+                await ExecuteSqlQuery(_connection, removeFromPerviousPositionQuery, cancellationToken);
+
+                string vacancyExistsQuery = 
+                $@"
+                    SELECT EXISTS
+                    (
+                        SELECT 1
+                        FROM department_position
+                        WHERE
+                            department_id={request.DepartmentId} AND
+                            position_id={request.PositionId} AND
+                            employee_id=NULL
+                    )
+                ";
+
+                bool vacancyExists = await ExecuteSqlQuery<bool>(_connection, vacancyExistsQuery, cancellationToken);
+
+                if (vacancyExists)
+                {
+                    string getVacncyIdQuery =
+                    $@"
+                        SELECT id
+                        FROM department_position
+                        WHERE
+                            department_id={request.DepartmentId} AND
+                            position_id={request.PositionId} AND
+                            employee_id=NULL
+                        LIMIT 1
+                    ";
+
+                    int vacancyId = await ExecuteSqlQuery<int>(_connection, getVacncyIdQuery, cancellationToken);
+
+                    string setEmployeeForDepartmentPositioQuery =
+                    $@"
+                        INSERT INTO department_position(employee_id)
+                        VALUES ({request.Employee.Id})
+                        WHERE id={vacancyId}
+                    ";
+                    
+                    await ExecuteSqlQuery(_connection, setEmployeeForDepartmentPositioQuery, cancellationToken);
+                }
+                else
+                {
+                    string createDepartmentPositioQuery =
+                    $@"
+                        INSERT INTO department_position(department_id, position_id, employee_id)
+                        VALUES ({request.DepartmentId}, {request.PositionId}, {request.Employee.Id})
+                    ";
+                    
+                    await ExecuteSqlQuery(_connection, createDepartmentPositioQuery, cancellationToken);
+                }
+            }
 
             string editEmployeeQuery = 
             $@"
@@ -94,10 +156,8 @@ namespace Domain.Commands
                     employment_date='{request.Employee.EmploymentDate:yyyy-MM-dd}',
                     salary='{request.Employee.Salary}'
                 WHERE id={request.Employee.Id}
-            ";            
-            
-            await ExecuteSqlQuery(_connection, removeFromPerviousPositionQuery, cancellationToken);
-            await ExecuteSqlQuery(_connection, createDepartmentPositioQuery, cancellationToken);
+            ";  
+
             await ExecuteSqlQuery(_connection, editEmployeeQuery, cancellationToken);
 
             return new()

@@ -92,6 +92,7 @@ namespace Domain.Commands
                 WHERE
                     department_position.employee_id IS NOT NULL AND
                     department_position.department_id={request.DepartmentId}
+                ORDER BY employees.first_name
             ";
 
             DepartmentDTO departmentDTO = await ExecuteSqlQuery<DepartmentDTO>(_connection, getDepartmentQuery, cancellationToken);

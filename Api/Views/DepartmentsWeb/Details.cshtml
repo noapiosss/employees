@@ -39,7 +39,13 @@ Employees:
                 <td class="employees-table-td">@employee.BirthDate</td>
                 <td class="employees-table-td">@employee.EmploymentDate</td>
                 <td class="employees-table-td">@employee.Salary</td>
-                <td class="employees-table-td"><button class="edit-employee-btn">edit</button></td>
+                <td class="employees-table-td">
+                        <a href="/EmployeeWeb/Edit/@employee.Id">
+                            <button class="edit-employee-btn">
+                                edit
+                            </button>
+                        </a>
+                    </td>
             </tr>
 
             isOdd = !isOdd;

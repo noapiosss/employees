@@ -53,8 +53,11 @@ namespace Domain.Base
         {
             using NpgsqlCommand command = connection.ExecuteCommand(sqlQuery);
             using NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken);
-
-            reader.Read();
+            
+            // if (typeof(T).IsValueType)
+            // {
+                reader.Read();
+            //}
             return ConvertToObject<T>(reader);
         }
 
