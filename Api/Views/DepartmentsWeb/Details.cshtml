@@ -13,7 +13,7 @@
 <b>Mininal salary:</b> @Model.MinSalary <br>
 <b>Maximal salary:</b> @Model.MaxSalary <br>
 <b>Average salary:</b> @Math.Round(Model.AvgSalary,2) <br>
-<button class="download-btn" id="download-btn" onclick="createAndDownloadTxt('@Model.ToString()')">download .txt</button> <br><br>
+<button class="download-btn" id="download-btn" onclick="downloadStatistics('@Model.Id')">download .txt</button> <br><br>
 
 
 Employees:

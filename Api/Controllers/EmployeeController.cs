@@ -64,7 +64,7 @@ namespace Api.Controllers
             }, cancellationToken);
         }
 
-        [HttpPost("/{employeeId}")]
+        [HttpPost("{employeeId}")]
         public Task<IActionResult> EditEmployee(int employeeId, [FromBody] CreateEmployeeRequest request, CancellationToken cancellationToken)
         {
             return SafeExecute(async () =>
@@ -134,7 +134,7 @@ namespace Api.Controllers
             }, cancellationToken);
         }
 
-        [HttpGet("/filters")]
+        [HttpGet("filters")]
         public Task<IActionResult> GetFilters(CancellationToken cancellationToken)
         {
             return SafeExecute(async () =>
@@ -147,7 +147,7 @@ namespace Api.Controllers
             }, cancellationToken);
         }
 
-        [HttpPost("/filtered")]
+        [HttpPost("filtered")]
         public Task<IActionResult> GetFilteredEmployees([FromBody] GetFilteredEmployeesRequest request, CancellationToken cancellationToken)
         {
             return SafeExecute(async () =>
@@ -166,7 +166,7 @@ namespace Api.Controllers
             }, cancellationToken);
         }
 
-        [HttpGet("/positions/{positionId}")]
+        [HttpGet("positions/{positionId}")]
         public Task<IActionResult> GetAllEmployeesByPosition(int positionId, CancellationToken cancellationToken)
         {
             return SafeExecute(async () =>
@@ -191,7 +191,7 @@ namespace Api.Controllers
             }, cancellationToken);
         }
 
-        [HttpGet("/departments/{departmentId}")]
+        [HttpGet("departments/{departmentId}")]
         public Task<IActionResult> GetAllEmployeesByDepartment(int departmentId, CancellationToken cancellationToken)
         {
             return SafeExecute(async () =>
@@ -216,7 +216,7 @@ namespace Api.Controllers
             }, cancellationToken);
         }
 
-        [HttpGet("/generate-test-data")]
+        [HttpGet("generate-test-data")]
         public Task<IActionResult> GenerateTestData(CancellationToken cancellationToken)
         {
             return SafeExecute(async () =>

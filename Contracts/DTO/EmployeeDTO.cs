@@ -21,15 +21,15 @@ namespace Contracts.DTO
         {
             StringBuilder sb = new();
 
-            sb.Append($"Id: {Id}|");
-            sb.Append($"Name: {FirstName} {LastName} {Patronymic}|");
-            sb.Append($"Department: {DepartmentName}|");
-            sb.Append($"Position: {PositionName}|");
-            sb.Append($"Salary: {Salary}|");
-            sb.Append($"Phone: {Phone}|");
-            sb.Append($"Address: {Address}|");
-            sb.Append($"Birth date: {BirthDate:yyyy-MM-dd}|");
-            sb.Append($"Employment date: {EmploymentDate:yyyy-MM-dd}|");
+            sb.AppendLine($"Id: {Id}");
+            sb.AppendLine($"Name: {FirstName} {LastName} {Patronymic}");
+            sb.AppendLine($"Department: {DepartmentName}");
+            sb.AppendLine($"Position: {PositionName}");
+            sb.AppendLine($"Salary: {Salary}");
+            sb.AppendLine($"Phone: {Phone}");
+            sb.AppendLine($"Address: {Address}");
+            sb.AppendLine($"Birth date: {BirthDate:yyyy-MM-dd}");
+            sb.AppendLine($"Employment date: {EmploymentDate:yyyy-MM-dd}");
 
             return sb.ToString();
         }

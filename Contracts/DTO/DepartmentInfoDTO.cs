@@ -19,19 +19,21 @@ namespace Contracts.DTO
         {
             StringBuilder sb = new();
 
-            sb.Append($"{Name} department|");
-            sb.Append($"Employees count: {Employees.Count}|");
-            sb.Append($"Average age: {AvgAge}|");
-            sb.Append($"Vacancies count: {VacanciesCount}|");
-            sb.Append($"Total salary: {TotalSalary}|");
-            sb.Append($"Mininal salary: {MinSalary}|");
-            sb.Append($"Maximal salary: {MaxSalary}|");
-            sb.Append($"Average salary: {AvgSalary}|");
-            sb.Append($"------------------------------------------|");
+            sb.AppendLine($"{Name} department");
+            sb.AppendLine($"Employees count: {Employees.Count}");
+            sb.AppendLine($"Average age: {AvgAge}");
+            sb.AppendLine($"Vacancies count: {VacanciesCount}");
+            sb.AppendLine($"Total salary: {TotalSalary}");
+            sb.AppendLine($"Mininal salary: {MinSalary}");
+            sb.AppendLine($"Maximal salary: {MaxSalary}");
+            sb.AppendLine($"Average salary: {AvgSalary}");
+            sb.AppendLine($"------------------------------------------");
+            sb.AppendLine($"Employees:");
+            sb.AppendLine($"------------------------------------------");
             foreach(EmployeeDTO employeeDTO in Employees)
             {
-                sb.Append(employeeDTO.ToString());
-                sb.Append($"------------------------------------------|");
+                sb.AppendLine(employeeDTO.ToString());
+                sb.AppendLine($"------------------------------------------");
             }
 
             return sb.ToString();
