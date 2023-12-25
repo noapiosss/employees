@@ -97,12 +97,21 @@ namespace Api.Controllers
                         });
                     }
 
-                    if (!result.DepartmentPositionExists)
+                    if (!result.DepartmentExists)
                     {
                         return ToActionResult(new()
                         {
-                            Code = ErrorCode.DepartmentPositionNotFound,
-                            Message = "Department or position in department does not exists"
+                            Code = ErrorCode.DepartmentNotFound,
+                            Message = "Department does not exists"
+                        });
+                    }
+
+                    if (!result.PositionExists)
+                    {
+                        return ToActionResult(new()
+                        {
+                            Code = ErrorCode.PositionNotFound,
+                            Message = "Position does not exists"
                         });
                     }
                 }

@@ -1,6 +1,4 @@
-using System;
-
-namespace Contracts.Database
+namespace Contracts.DTO
 {
     public struct DepartmentDTO
     {

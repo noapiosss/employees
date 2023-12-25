@@ -1,0 +1,61 @@
+@model Contracts.DTO.DepartmentInfoDTO
+
+@{
+    ViewData["Title"] = @Model.Name;
+    Layout = "_Layout";
+}
+
+<div class="department-name">@Model.Name department</div>
+<b>Employees count:</b> @Model.Employees.Count <br>
+<b>Average age:</b> @Math.Round(Model.AvgAge, 2) <br>
+<b>Vacancies count:</b> @Model.VacanciesCount <br>
+<b>Total salary:</b> @Model.TotalSalary <br>
+<b>Mininal salary:</b> @Model.MinSalary <br>
+<b>Maximal salary:</b> @Model.MaxSalary <br>
+<b>Average salary:</b> @Math.Round(Model.AvgSalary,2) <br>
+<button class="download-btn" id="download-btn" onclick="createAndDownloadTxt('@Model.ToString()')">download .txt</button> <br><br>
+
+
+Employees:
+<table class="employees-table">
+    <thead>
+        <th class="employees-table-th">Name</th>
+        <th class="employees-table-th">Position</th>
+        <th class="employees-table-th">Address</th>
+        <th class="employees-table-th">Phone</th>
+        <th class="employees-table-th">Birth Date</th>
+        <th class="employees-table-th">Employment Date</th>
+        <th class="employees-table-th">Salary</th>
+        <th class="employees-table-th"></th>
+    </thead>
+
+    <tbody>
+        @{bool isOdd = true;}
+        @foreach(Contracts.DTO.EmployeeDTO employee in Model.Employees)
+        {
+            string trClass = isOdd ? "odd" : "even";
+
+            <tr class="employees-table-tr @trClass">
+                <td class="employees-table-td">@employee.FirstName @employee.LastName @employee.Patronymic</td>
+                <td class="employees-table-td">@employee.PositionName</td>
+                <td class="employees-table-td">@employee.Address</td>
+                <td class="employees-table-td">@employee.Phone</td>
+                <td class="employees-table-td">@employee.BirthDate</td>
+                <td class="employees-table-td">@employee.EmploymentDate</td>
+                <td class="employees-table-td">@employee.Salary</td>
+                <td class="employees-table-td">
+                        <a href="/EmployeeWeb/Edit/@employee.Id">
+                            <button class="edit-employee-btn">
+                                edit
+                            </button>
+                        </a>
+                    </td>
+            </tr>
+
+            isOdd = !isOdd;
+        }
+    </tbody>
+</table>
+
+
+<script src="~/js/download-txt.js" asp-append-version="true"></script>

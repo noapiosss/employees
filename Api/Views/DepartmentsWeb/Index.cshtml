@@ -1,0 +1,33 @@
+@model IList<Contracts.DTO.DepartmentDTO>
+
+@{
+    ViewData["Title"] = "Departments";
+    Layout = "_Layout";
+}
+
+@if(!Model.Any())
+{
+    <h1>No any result</h1>
+}
+else
+{    
+    <table class="departments-table">
+        <thead>
+            <th class="departments-table-th">Departments</th>
+        </thead>
+
+        <tbody>
+            @{bool isOdd = true;}
+            @foreach(Contracts.DTO.DepartmentDTO department in Model)
+            {
+                string trClass = isOdd ? "departments-table-tr-odd" : "departments-table-tr-even";                
+                
+                    <tr class=@trClass onclick="document.location = '/DepartmentsWeb/Details?departmentId=@department.Id';">
+                        <td  class="departments-table-td">@department.Name</td>
+                    </tr>               
+            
+                isOdd = !isOdd;
+            }
+        </tbody>
+    </table>
+}

@@ -1,0 +1,47 @@
+.departments-table
+{
+    width: 100%;
+    border-radius: 5px;
+}
+
+.departments-table-th
+{
+    background-color: rgb(136, 136, 136);
+    color: white;
+    border-left: 0;
+    border-right: 0;
+    
+    padding-left: 5px;
+    padding-right: 5px;
+
+    text-align: center;
+    font-size: larger;
+}
+
+.departments-table-td
+{
+    border: 1px solid rgb(184, 184, 184);
+    border-left: 0;
+    border-right: 0;
+
+    padding-left: 5px;
+    padding-right: 5;
+
+    text-align: center;
+}
+
+.departments-table-tr-odd
+{
+    background-color: rgb(255, 255, 255);
+}
+
+.departments-table-tr-even
+{
+    background-color: rgb(236, 236, 236);
+}
+
+.departments-table-tr-odd:hover, .departments-table-tr-even:hover
+{
+    background-color: rgb(218, 218, 218);
+    cursor: pointer;
+}

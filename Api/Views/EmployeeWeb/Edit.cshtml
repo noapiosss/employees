@@ -1,0 +1,162 @@
+@model Api.Models.EditEmployeeModel
+
+@{
+    ViewData["Title"] = $"{Model.Employee.FirstName} {Model.Employee.LastName} {Model.Employee.Patronymic}";
+    Layout = "_Layout";
+}
+
+
+
+<form asp-action="Edit" class="edit-employee-form">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group row">
+                <div class="col-sm-2">
+                    <label class="control-label">Id</label>
+                </div>
+
+                <div class="col">
+                    <input asp-for="Employee.Id" class="form-control" readonly/>
+                    <span asp-validation-for="Employee.Id" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-sm-2">
+                    <label class="control-label">First Name</label>
+                </div>
+
+                <div class="col">
+                    <input asp-for="Employee.FirstName" class="form-control" />
+                    <span asp-validation-for="Employee.FirstName" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-sm-2">
+                    <label class="control-label">Last Name</label>
+                </div>
+
+                <div class="col">
+                    <input asp-for="Employee.LastName" class="form-control" />
+                    <span asp-validation-for="Employee.LastName" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-sm-2">
+                    <label class="control-label">Patronymic</label>
+                </div>
+
+                <div class="col">
+                    <input asp-for="Employee.Patronymic" class="form-control" />
+                    <span asp-validation-for="Employee.Patronymic" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-sm-2">
+                    <label class="control-label">Phone</label>
+                </div>
+
+                <div class="col">
+                    <input asp-for="Employee.Phone" class="form-control" />
+                    <span asp-validation-for="Employee.Phone" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-sm-2">
+                    <label class="control-label">Address</label>
+                </div>
+
+                <div class="col">
+                    <input asp-for="Employee.Address" class="form-control" />
+                    <span asp-validation-for="Employee.Address" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-sm-2">
+                    <label class="control-label">Department</label>
+                </div>
+
+                <div class="col">
+                    <select name="departmentId"  class="form-select">
+                        @for(int i = 0; i < Model.AllDepartments.Count; ++i)
+                        {
+                            if (Model.AllDepartments[i].Name == Model.Employee.DepartmentName)
+                            {
+                                <option value=@Model.AllDepartments[i].Id selected>@Model.AllDepartments[i].Name</option>
+                            }
+                            else
+                            {
+                                <option value=@Model.AllDepartments[i].Id >@Model.AllDepartments[i].Name</option>
+                            }
+                        }
+                    </select>
+                    <span asp-validation-for="AllDepartments" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-sm-2">
+                    <label class="control-label">Position</label>
+                </div>
+
+                <div class="col">
+                    <select name="positionId" class="form-select">
+                        @for(int i = 0; i < Model.AllPositions.Count; ++i)
+                        {
+                            if (Model.AllPositions[i].Name == Model.Employee.PositionName)
+                            {
+                                <option value=@Model.AllPositions[i].Id selected>@Model.AllPositions[i].Name</option>
+                            }
+                            else
+                            {
+                                <option value=@Model.AllPositions[i].Id >@Model.AllPositions[i].Name</option>
+                            }
+                        }
+                    </select>
+                    <span asp-validation-for="AllPositions" class="text-danger"></span>
+                </div>
+            </div>
+
+
+            <div class="form-group row">
+                <div class="col-sm-2">
+                    <label class="control-label">Birth Date</label>
+                </div>
+
+                <div class="col">
+                    <input asp-for="Employee.BirthDate" type="date" class="form-control" />
+                    <span asp-validation-for="Employee.BirthDate" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-sm-2">
+                    <label class="control-label">Employment Date</label>
+                </div>
+
+                <div class="col">
+                    <input asp-for="Employee.EmploymentDate" type="date" class="form-control" />
+                    <span asp-validation-for="Employee.EmploymentDate" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-sm-2">
+                    <label class="control-label">Salary</label>
+                </div>
+
+                <div class="col">
+                    <input asp-for="Employee.Salary" type="number" class="form-control" />
+                    <span asp-validation-for="Employee.Salary" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <input type="submit" value="Save" class="submit-empolyee-btn" />
+            </div>
+</form>

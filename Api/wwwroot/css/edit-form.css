@@ -1,0 +1,27 @@
+.edit-employee-form
+{
+    border: solid 1px rgb(212, 212, 212);
+    border-radius: 5px;
+    background-color: rgb(252, 252, 252);
+    padding: 15px;
+}
+
+.row
+{
+    margin-top: 10px;
+}
+
+
+
+.submit-empolyee-btn
+{
+    border: 0;
+    border-radius: 5px;
+    color: white;
+    background-color: rgb(133, 133, 133);
+}
+
+.submit-empolyee-btn:hover
+{
+    background-color: rgb(88, 88, 88);
+}

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Contracts.Database;
+using Contracts.DTO;
 using Domain.Base;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -11,11 +11,16 @@ namespace Domain.Commands
 {
     public class GetAllEmployeesQuery : IRequest<GetAllEmployeesQueryResult>
     {
+        public int Page { get; init; }
+        public int PerPage { get; init; }
     }
 
     public class GetAllEmployeesQueryResult
     {
         public ICollection<EmployeeDTO> Employees { get; init; }
+        public int PagesCount { get; init; }
+        public int Page { get; init; }
+        public int PerPage { get; init; }
     }
 
     internal class GetAllEmployeesQueryHandler : BaseHandler<GetAllEmployeesQuery, GetAllEmployeesQueryResult>
@@ -48,13 +53,32 @@ namespace Domain.Commands
                 LEFT JOIN department_position ON department_position.employee_id=employees.id
                 LEFT JOIN departments ON departments.id=department_position.department_id
                 LEFT JOIN positions ON positions.id=department_position.position_id
+                ORDER BY employees.first_name
+                OFFSET {(request.Page - 1) * request.PerPage}
+                LIMIT {request.PerPage}
             ";
 
             List<EmployeeDTO> employees = await ExecuteCollectionSqlQuery<EmployeeDTO>(_connection, getAllEmployeesQuery, cancellationToken);
 
+            string getEmployeesCountQuery = 
+            $@"
+                SELECT COUNT(*)
+                FROM employees
+            ";
+
+            int employeesCount = await ExecuteSqlQuery<int>(_connection, getEmployeesCountQuery, cancellationToken);
+            int pagesCount = employeesCount / request.PerPage;
+            if (employeesCount % request.PerPage > 0)
+            {
+                ++pagesCount;
+            }
+
             return new()
             {
-                Employees = employees
+                Employees = employees,
+                Page = request.Page,
+                PerPage = request.PerPage,
+                PagesCount = pagesCount
             };
         }
     }

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Contracts.Database;
+using Contracts.DTO;
 using Contracts.Http;
 using Domain.Base;
 using MediatR;
@@ -16,11 +16,16 @@ namespace Domain.Commands
         public int PositionId { get; init; }
         public BoundFilterValues BoundFilterValues { get; init; }
         public string SearchRequest { get; init; }
+        public int Page { get; init; }
+        public int PerPage { get; init; }
     }
 
     public class GetFilteredEmployeesQueryResult
     {
-        public ICollection<EmployeeDTO> Employees { get; init; }
+        public ICollection<EmployeeDTO> Employees { get; init; }        
+        public int PagesCount { get; init; }
+        public int Page { get; init; }
+        public int PerPage { get; init; }
     }
 
     internal class GetFilteredEmployeesQueryHandler : BaseHandler<GetFilteredEmployeesQuery, GetFilteredEmployeesQueryResult>
@@ -66,14 +71,33 @@ namespace Domain.Commands
                     employees.salary<={request.BoundFilterValues.MaxSalary}
             ";
 
+            string getFilteredEmployeesCountQuery = 
+            $@"
+                SELECT COUNT(*)
+                FROM department_position
+                JOIN employees ON department_position.employee_id=employees.id
+                JOIN positions ON department_position.position_id=positions.id
+                JOIN departments ON department_position.department_id=departments.id                
+                WHERE
+                    department_position.employee_id is NOT NULL AND
+                    employees.employment_date>='{DateOnly.FromDateTime(request.BoundFilterValues.MinEmploymentDate):yyyy-MM-dd}' AND
+                    employees.employment_date<='{DateOnly.FromDateTime(request.BoundFilterValues.MaxEmploymentDate):yyyy-MM-dd}' AND
+                    employees.birth_date>='{minBirthDate:yyyy-MM-dd}' AND
+                    employees.birth_date<='{maxBirthDate:yyyy-MM-dd}' AND
+                    employees.salary>={request.BoundFilterValues.MinSalary} AND
+                    employees.salary<={request.BoundFilterValues.MaxSalary}
+            ";
+
             if (request.DepartmentId != 0)
             {
                 getFilteredEmployeesQuery += $" AND\n department_position.department_id={request.DepartmentId}";
+                getFilteredEmployeesCountQuery += $" AND\n department_position.department_id={request.DepartmentId}";
             }
 
             if (request.PositionId !=0)
             {
                 getFilteredEmployeesQuery += $" AND\n department_position.position_id={request.PositionId}";
+                getFilteredEmployeesCountQuery += $" AND\n department_position.position_id={request.PositionId}";
             }
 
             if (!string.IsNullOrWhiteSpace(request.SearchRequest))
@@ -87,14 +111,44 @@ namespace Domain.Commands
                         employees.patronymic LIKE '%{request.SearchRequest}%' OR
                         employees.address LIKE '%{request.SearchRequest}%' OR
                         employees.phone LIKE '%{request.SearchRequest}%'
-                    )";
+                    )
+                ";
+
+                getFilteredEmployeesCountQuery +=
+                $@"
+                    AND
+                    (
+                        employees.first_name LIKE '%{request.SearchRequest}%' OR
+                        employees.last_name LIKE '%{request.SearchRequest}%' OR
+                        employees.patronymic LIKE '%{request.SearchRequest}%' OR
+                        employees.address LIKE '%{request.SearchRequest}%' OR
+                        employees.phone LIKE '%{request.SearchRequest}%'
+                    )
+                ";
             }
+
+            getFilteredEmployeesQuery += "\n ORDER BY employees.first_name";
+            getFilteredEmployeesQuery +=
+            $@"
+                OFFSET {(request.Page - 1) * request.PerPage}
+                LIMIT {request.PerPage}
+            ";
 
             List<EmployeeDTO> employees = await ExecuteCollectionSqlQuery<EmployeeDTO>(_connection, getFilteredEmployeesQuery, cancellationToken);
 
+            int employeesCount = await ExecuteSqlQuery<int>(_connection, getFilteredEmployeesCountQuery, cancellationToken);
+            int pagesCount = employeesCount / request.PerPage;
+            if (employeesCount % request.PerPage > 0)
+            {
+                ++pagesCount;
+            }
+
             return new()
             {
-                Employees = employees
+                Employees = employees,
+                Page = request.Page,
+                PerPage = request.PerPage,
+                PagesCount = pagesCount
             };
         }
     }

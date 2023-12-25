@@ -1,0 +1,260 @@
+@model Api.Models.EmployeesViewModel
+
+@{
+    ViewData["Title"] = "Employees";
+    Layout = "_Layout";
+}
+
+@inherits Helper<TModel>
+
+<form asp-action="Employees" class="search-fileters">
+    search text
+    <div class="form-group row">
+        <input asp-for="Filters.SearchRequest"
+               type="text
+               value=@(Model.Filters is null ? "" : Model.Filters.SearchRequest)
+               class="form-control">
+    </div>
+
+     
+    <div class="form-group row">
+        <div class="col">
+            Department   
+            <select asp-for="Filters.DepartmentId" class="form-select">
+                @{int depId = Model.Filters is null ? Model.BoundValues.Departments[0].Id : Model.Filters.DepartmentId;}
+                @for(int i = 0; i < Model.BoundValues.Departments.Count; ++i)
+                {
+                    if (Model.BoundValues.Departments[i].Id == depId)
+                    {
+                        <option value=@Model.BoundValues.Departments[i].Id selected>@Model.BoundValues.Departments[i].Name</option>
+                    }
+                    else
+                    {
+                        <option value=@Model.BoundValues.Departments[i].Id >@Model.BoundValues.Departments[i].Name</option>
+                    }
+                }
+            </select>
+        </div>
+
+        <div class="col">
+            Position
+            <select asp-for="Filters.PositionId" class="form-select">
+                @{int posId = Model.Filters is null ? Model.BoundValues.Positions[0].Id : Model.Filters.PositionId;}
+                @for(int i = 0; i < Model.BoundValues.Positions.Count; ++i)
+                {
+                    if (Model.BoundValues.Positions[i].Id == posId)
+                    {
+                        <option value=@Model.BoundValues.Positions[i].Id selected>@Model.BoundValues.Positions[i].Name</option>
+                    }
+                    else
+                    {
+                        <option value=@Model.BoundValues.Positions[i].Id >@Model.BoundValues.Positions[i].Name</option>
+                    }
+                }
+            </select>
+        </div>   
+    </div>
+
+    <div class="form-group row">
+        <div class="col">
+            min age
+            <input asp-for="Filters.BoundFilterValues.MinAge"
+                   type="number"
+                   min=@Model.BoundValues.BoundFilterValues.MinAge
+                   max=@Model.BoundValues.BoundFilterValues.MaxAge
+                   value=@(Model.Filters is null ? Model.BoundValues.BoundFilterValues.MinAge : Model.Filters.BoundFilterValues.MinAge)
+                   class="form-control">
+        </div>
+        
+        <div class="col">
+            max age
+            <input asp-for="Filters.BoundFilterValues.MaxAge"
+                   type="number"
+                   min=@Model.BoundValues.BoundFilterValues.MinAge
+                   max=@Model.BoundValues.BoundFilterValues.MaxAge
+                   value=@(Model.Filters is null ? Model.BoundValues.BoundFilterValues.MaxAge : Model.Filters.BoundFilterValues.MaxAge)
+                   class="form-control">
+        </div>
+    </div>
+    
+    <div class="form-group row">
+        <div class="col">
+        min employment date 
+        <input asp-for="Filters.BoundFilterValues.MinEmploymentDate"
+               type="date"
+               min=@Model.BoundValues.BoundFilterValues.MinEmploymentDate.ToString("yyyy-MM-dd")
+               max=@Model.BoundValues.BoundFilterValues.MaxEmploymentDate.ToString("yyyy-MM-dd")
+               value=@(Model.Filters is null ? Model.BoundValues.BoundFilterValues.MinEmploymentDate.ToString("yyyy-MM-dd") : Model.Filters.BoundFilterValues.MinEmploymentDate.ToString("yyyy-MM-dd"))
+               class="form-control">
+        </div>
+                           
+        <div class="col">
+        max employment date
+        <input asp-for="Filters.BoundFilterValues.MaxEmploymentDate"
+               type="date"
+               min=@Model.BoundValues.BoundFilterValues.MinEmploymentDate.ToString("yyyy-MM-dd")
+               max=@Model.BoundValues.BoundFilterValues.MaxEmploymentDate.ToString("yyyy-MM-dd")
+               value=@(Model.Filters is null ? Model.BoundValues.BoundFilterValues.MaxEmploymentDate.ToString("yyyy-MM-dd") : Model.Filters.BoundFilterValues.MaxEmploymentDate.ToString("yyyy-MM-dd"))
+               class="form-control">
+        </div>
+    </div>
+
+
+    
+    <div class="form-group row">
+        <div class="col">
+        min salary
+        <input asp-for="Filters.BoundFilterValues.MinSalary"
+               type="number" 
+               min=@Model.BoundValues.BoundFilterValues.MinSalary
+               max=@Model.BoundValues.BoundFilterValues.MaxSalary
+               value=@(Model.Filters is null ? Model.BoundValues.BoundFilterValues.MinSalary : Model.Filters.BoundFilterValues.MinSalary)
+               step="any"
+               class="form-control">
+        </div>
+
+        <div class="col">
+        max salary
+        <input asp-for="Filters.BoundFilterValues.MaxSalary"
+               type="number"
+               min=@Model.BoundValues.BoundFilterValues.MinSalary
+               max=@Model.BoundValues.BoundFilterValues.MaxSalary
+               value=@(Model.Filters is null ? Model.BoundValues.BoundFilterValues.MaxSalary : Model.Filters.BoundFilterValues.MaxSalary)
+               step="any"
+               class="form-control">
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <button type="submit" class="edit-employee-btn" >search</button>
+    </div>
+</form>
+
+<br>
+<br>
+<br>
+
+@if(!Model.Employees.Any())
+{
+    <h1>No any result</h1>
+}
+else
+{    
+    <table class="employees-table">
+        <thead>
+            <th class="employees-table-th">Name</th>
+            <th class="employees-table-th">Department</th>
+            <th class="employees-table-th">Position</th>
+            <th class="employees-table-th">Address</th>
+            <th class="employees-table-th">Phone</th>
+            <th class="employees-table-th">Birth Date</th>
+            <th class="employees-table-th">Employment Date</th>
+            <th class="employees-table-th">Salary</th>
+            <th class="employees-table-th"></th>
+        </thead>
+
+        <tbody>
+            @{bool isOdd = true;}
+            @foreach(Contracts.DTO.EmployeeDTO employee in Model.Employees)
+            {
+                string trClass = isOdd ? "odd" : "even";
+
+                <tr class="employees-table-tr @trClass">
+                    <td class="employees-table-td">@employee.FirstName @employee.LastName @employee.Patronymic</td>
+                    <td class="employees-table-td">@employee.DepartmentName</td>
+                    <td class="employees-table-td">@employee.PositionName</td>
+                    <td class="employees-table-td">@employee.Address</td>
+                    <td class="employees-table-td">@employee.Phone</td>
+                    <td class="employees-table-td">@employee.BirthDate</td>
+                    <td class="employees-table-td">@employee.EmploymentDate</td>
+                    <td class="employees-table-td">@employee.Salary</td>
+                    <td class="employees-table-td">
+                        <a href="/EmployeeWeb/Edit/@employee.Id">
+                            <button class="edit-employee-btn">
+                                edit
+                            </button>
+                        </a>
+                    </td>
+                </tr>
+
+                isOdd = !isOdd;
+            }
+        </tbody>
+    </table>
+
+    <br>
+
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            @if(Model.Page > 1)
+            {
+                <li class="page-item">
+                    <a class="page-link" href=@PaginationHref(ViewContext.HttpContext.Request.QueryString.Value, Model.Page-1) aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+
+                @if(Model.Page > 2)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href=@PaginationHref(ViewContext.HttpContext.Request.QueryString.Value, Model.Page-2)>
+                            @(Model.Page - 2)
+                        </a>
+                    </li>
+                }
+
+                <li class="page-item">
+                    <a class="page-link" href=@PaginationHref(ViewContext.HttpContext.Request.QueryString.Value, Model.Page-1)>
+                        @(Model.Page - 1)
+                    </a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item disabled">
+                    <a class="page-link" href="" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+            }
+
+            <li class="page-item disabled">
+                <a class="page-link" href="">
+                    @Model.Page
+                </a>
+            </li>
+
+            @if(Model.Page < Model.PagesCount)
+            {
+                <li class="page-item">
+                    <a class="page-link" href=@PaginationHref(ViewContext.HttpContext.Request.QueryString.Value, Model.Page+1)>
+                        @(Model.Page + 1)
+                    </a>
+                </li>
+
+                @if(Model.Page + 1 < Model.PagesCount)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href=@PaginationHref(ViewContext.HttpContext.Request.QueryString.Value, Model.Page+2)>
+                            @(Model.Page + 2)
+                        </a>
+                    </li>                
+                }
+
+                <li class="page-item">
+                    <a class="page-link" href=@PaginationHref(ViewContext.HttpContext.Request.QueryString.Value, Model.Page+1) aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item disabled">
+                    <a class="page-link" href="" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            }
+        </ul>
+    </nav>
+}

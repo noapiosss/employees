@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Domain.Base;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using PersonGenerator;
 
 namespace Domain.Commands
 {
@@ -67,20 +68,33 @@ namespace Domain.Commands
             List<int> positionIds = await ExecuteCollectionSqlQuery<int>(_connection, createPositionsQuery, cancellationToken);
 
             StringBuilder sb = new();
-            int employeesCount = departmentIds.Count * positionIds.Count;
+            int employeesCount = 200;
+
+            PersonGenerator.GeneratorSettings settings = new GeneratorSettings()
+            {
+                Language = Languages.English,
+                FirstName = true,
+                MiddleName = true,
+                LastName = true,
+                Email = true
+            };
+            PersonGenerator.PersonGenerator personGenerator = new PersonGenerator.PersonGenerator(settings);
+            List<Person> p = personGenerator.Generate(employeesCount);
 
             sb.AppendLine("INSERT INTO employees(first_name, last_name, patronymic, address, phone, birth_date, employment_date, salary)");
             sb.AppendLine("VALUES");
             for(int i = 0; i < employeesCount; ++i)
             {
-                string firstName = Guid.NewGuid().ToString();
-                string lastName = Guid.NewGuid().ToString();
-                string patronymic = Guid.NewGuid().ToString();
-                string address = Guid.NewGuid().ToString();
-                string phone = Guid.NewGuid().ToString();
+                
+
+                string firstName = p[i].FirstName;
+                string lastName = p[i].LastName;
+                string patronymic = p[i].MiddleName;
+                string address = p[i].Email;
+                string phone = $"044-{_random.Next(100,999)}-{_random.Next(10,99)}-{_random.Next(10,99)}";
                 DateOnly birthDate = new(_random.Next(1980,2000), _random.Next(1,12), _random.Next(1,25));
                 DateOnly employmentDate = new(_random.Next(1980,2000), _random.Next(1,12), _random.Next(1,25));
-                decimal salary = (decimal)_random.NextSingle()*_random.Next(10000,100000);
+                decimal salary = (decimal)Math.Round(_random.NextSingle()*_random.Next(10000,100000), 2);
 
                 sb.Append($"('{firstName}', '{lastName}', '{patronymic}', '{address}', '{phone}', '{birthDate:yyyy-MM-dd}', '{employmentDate:yyyy-MM-dd}', {salary})");
 
@@ -100,22 +114,18 @@ namespace Domain.Commands
             sb.AppendLine("INSERT INTO department_position(department_id, position_id, employee_id)");
             sb.AppendLine("VALUES");
 
-            int employeeId = 1;
-            for(int i = 0; i < departmentIds.Count; ++i)
+            for(int i = 0; i < employeeIds.Count; ++i)
             {
-                for(int j = 0; j < positionIds.Count; ++j)
-                {
-                    sb.Append("(");
-                    sb.Append($"(SELECT id FROM departments WHERE departments.id={departmentIds[i]}),");
-                    sb.Append($"(SELECT id FROM positions WHERE positions.id={positionIds[j]}),");
-                    sb.Append($"(SELECT id FROM employees WHERE employees.id={employeeId++})");
+                sb.Append("(");
+                    sb.Append($"(SELECT id FROM departments WHERE departments.id={departmentIds[_random.Next(departmentIds.Count)]}),");
+                    sb.Append($"(SELECT id FROM positions WHERE positions.id={positionIds[_random.Next(positionIds.Count)]}),");
+                    sb.Append($"(SELECT id FROM employees WHERE employees.id={employeeIds[i]})");
                     sb.Append(")");
 
-                    if (i != departmentIds.Count - 1 || j != positionIds.Count - 1)
+                    if (i != employeeIds.Count - 1)
                     {
                         sb.AppendLine(",");
                     }
-                }
             }
             sb.Append(';');
 

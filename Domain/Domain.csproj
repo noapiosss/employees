@@ -8,6 +8,7 @@
     <PackageReference Include="MediatR" Version="12.2.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.ApplicationInsights" Version="2.22.0" />
     <PackageReference Include="Npgsql" Version="8.0.1" />
+    <PackageReference Include="PersonGenerator" Version="1.0.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
   </ItemGroup>
 
